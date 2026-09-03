@@ -54,19 +54,19 @@ export default function EvidencePanel({ references = [] }) {
               </div>
 
               <div>
-                <h4 className="text-sm font-semibold text-foreground">
-                  {item.title}
+                <h4 className={`text-sm font-semibold text-foreground ${lang === "ur" ? "font-urdu text-base" : ""}`}>
+                  {lang === "ur" && item.titleUr ? item.titleUr : item.title}
                 </h4>
                 {item.citation && (
-                  <p className="text-xs font-mono text-muted-foreground mt-0.5">
+                  <p className="text-xs font-mono text-muted-foreground mt-0.5" dir="ltr">
                     {item.citation}
                   </p>
                 )}
               </div>
 
-              {(item.excerpt || item.summary) && (
-                <p className="text-xs leading-relaxed text-muted-foreground bg-muted/30 p-2.5 rounded border border-border/50">
-                  "{item.excerpt || item.summary}"
+              {(item.summaryUr || item.excerpt || item.summary) && (
+                <p className={`text-xs leading-relaxed text-muted-foreground bg-muted/30 p-2.5 rounded border border-border/50 ${lang === "ur" ? "font-urdu text-sm" : ""}`}>
+                  "{lang === "ur" && item.summaryUr ? item.summaryUr : item.excerpt || item.summary}"
                 </p>
               )}
 
@@ -74,7 +74,7 @@ export default function EvidencePanel({ references = [] }) {
                 <div className="flex items-center gap-3">
                   {item.court && (
                     <span>
-                      {t("common.court")}: <strong>{item.court}</strong>
+                      {t("common.court")}: <strong>{lang === "ur" && item.court === "Statute" ? "پاکستانی قانون / آئین" : item.court}</strong>
                     </span>
                   )}
                   {item.date && (
@@ -84,7 +84,7 @@ export default function EvidencePanel({ references = [] }) {
                   )}
                 </div>
                 {item.caseId && (
-                  <span className="font-mono text-[10px]">{item.caseId}</span>
+                  <span className="font-mono text-[10px]" dir="ltr">{item.caseId}</span>
                 )}
               </div>
             </Card>

@@ -6,11 +6,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-1",
     title: "Article 9 — Security of person (Constitution of Pakistan)",
+    titleUr: "آرٹیکل 9 — سلامتی شخص (آئین پاکستان 1973)",
     caseId: "CONST-ART-9",
     court: "Statute",
     date: "1973",
     category: "constitutional",
     summary: "No person shall be deprived of life or liberty save in accordance with law. Fundamental protection against illegal detention, state abuse, and unlawful eviction without due process.",
+    summaryUr: "قانون کے مطابق ہونے کے سوا کسی شخص کو زندگی یا آزادی سے محروم نہیں کیا جائے گا۔ بلا جواز گرفتاری، ریاستی اختیارات کے ناجائز استعمال اور زبردستی بے دخلی کے خلاف بنیادی آئینی تحفظ۔",
     fullText: "Article 9 of the Constitution of the Islamic Republic of Pakistan guarantees that no person shall be deprived of life or liberty save in accordance with law. The Supreme Court has repeatedly affirmed that 'life' includes the right to livelihood, dignity, and shelter.",
     keywords: ["article 9", "security", "life", "liberty", "detention", "constitution", "fundamental right"],
     sourceType: "statute",
@@ -20,11 +22,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-2",
     title: "Punjab Rented Premises Act 2009 — Section 15 (Eviction Grounds)",
+    titleUr: "پنجاب رینٹڈ پریمسز ایکٹ 2009 — دفعہ 15 (بے دخلی کی قانونی وجوہات)",
     caseId: "PRPA-2009-S15",
     court: "Statute",
     date: "2009",
     category: "tenancy",
     summary: "Landlord cannot evict a tenant arbitrarily. Eviction requires specific statutory grounds: expiry of tenancy, default in rent payment, subletting without consent, or personal bona fide need.",
+    summaryUr: "مالک مکان اپنی مرضی سے کرایہ دار کو بے دخل نہیں کر سکتا۔ بے دخلی کے لیے کرایہ نامے کی مدت ختم ہونا، کرائے میں تاخیر یا ذاتی ضروری ضرورت جیسے قانونی دلائل رینٹ ٹربیونل کے سامنے ثابت کرنا لازمی ہے۔",
     fullText: "Under Section 15 of Punjab Rented Premises Act 2009, an application for eviction can only be submitted to the Rent Tribunal on verified grounds including expiry of tenancy period, failure to pay rent within 30 days of due date, or breach of written tenancy agreement.",
     keywords: ["rent", "tenancy", "eviction", "tenant", "landlord", "written agreement", "rent tribunal"],
     sourceType: "statute",
@@ -34,11 +38,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-3",
     title: "Sindh Rented Premises Ordinance 1979 — Protection from Dispossession",
+    titleUr: "سندھ رینٹڈ پریمسز آرڈیننس 1979 — غیر قانونی بے دخلی سے تحفظ",
     caseId: "SRPO-1979-S15",
     court: "Statute",
     date: "1979",
     category: "tenancy",
     summary: "Tenant cannot be forcefully dispossessed without an order of the Rent Controller. Forceful eviction or utility disconnection by landlord is a penal offence.",
+    summaryUr: "رینٹ کنٹرولر کے باضابطہ حکم کے بغیر کرایہ دار کو زبردستی بے دخل نہیں کیا جا سکتا۔ بجلی، پانی یا گیس کی بندش مالک کی طرف سے قابل سزا جرم ہے۔",
     fullText: "Under Sindh Rented Premises Ordinance, a landlord is strictly prohibited from cutting off electricity, water, or gas or attempting forceful entry without a decree from the Rent Controller.",
     keywords: ["rent", "sindh", "eviction", "controller", "dispossession", "utilities", "notice"],
     sourceType: "statute",
@@ -48,11 +54,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-4",
     title: "Family Courts Act 1964 — Maintenance & Dower (Mehar)",
+    titleUr: "فیملی کورٹس ایکٹ 1964 — نفقہ اور مہر کا تحفظ",
     caseId: "FCA-1964-S5",
     court: "Statute",
     date: "1964",
     category: "family",
     summary: "Family Courts have exclusive jurisdiction over dissolution of marriage, maintenance for wife and minors, recovery of prompt/deferred dower (mehar), and custody of children.",
+    summaryUr: "فیملی کورٹس کو تنسیخ نکاح، بیوی اور بچوں کے ماہانہ نفقہ، بقایا مہر اور بچوں کی حضانت کے معاملات فوری حل کرنے کے خصوصی اختیارات حاصل ہیں۔",
     fullText: "Section 5 read with Schedule of Family Courts Act 1964 empowers the Family Court to adjudicate expeditiously claims of maintenance for wife and children, recovery of dowry articles, and mehar.",
     keywords: ["family", "maintenance", "mehar", "dower", "custody", "divorce", "khula", "children"],
     sourceType: "statute",
@@ -62,11 +70,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-5",
     title: "Guardians and Wards Act 1890 — Welfare of the Minor",
+    titleUr: "گارڈینز اینڈ وارڈز ایکٹ 1890 — بچے کی فلاح و بہبود",
     caseId: "GWA-1890-S17",
     court: "Statute",
     date: "1890",
     category: "family",
     summary: "In determining custody, the welfare of the minor is the supreme and paramount consideration for the court, overriding mechanical claims.",
+    summaryUr: "بچوں کی حضانت اور تحویل کے فیصلے میں عدالت کے لیے بچے کی تعلیم، صحت اور فلاح و بہبود ہی سب سے بنیادی اور لازمی اصول ہے۔",
     fullText: "Section 17 of the Guardians and Wards Act establishes that the court shall be guided by what appears to be for the welfare of the minor consistent with the law to which the minor is subject.",
     keywords: ["custody", "minor", "welfare of minor", "guardian", "children", "family"],
     sourceType: "statute",
@@ -76,11 +86,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-6",
     title: "Pakistan Penal Code (PPC) — Section 489-F (Dishonestly Issuing Cheque)",
+    titleUr: "تعزیرات پاکستان — دفعہ 489-F (بدنیتی سے چیک جاری کرنا)",
     caseId: "PPC-1860-S489F",
     court: "Statute",
     date: "1860",
     category: "contract",
     summary: "Dishonestly issuing a cheque towards repayment of loan or fulfillment of an obligation that bounces is punishable with imprisonment up to 3 years or fine.",
+    summaryUr: "قرض کی واپسی یا معاہدے کے تحت دیا گیا چیک ڈس آنر (باؤنس) ہونے پر 3 سال تک قید اور جرمانہ کی سزا کا قانون ہے۔",
     fullText: "Whoever dishonestly issues a cheque towards repayment of a loan or fulfillment of an obligation which is dishonoured on presentation shall be punished with imprisonment up to three years or with fine.",
     keywords: ["cheque", "dishonour", "bounce", "489-f", "loan", "debt", "contract", "payment"],
     sourceType: "statute",
@@ -90,11 +102,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-7",
     title: "West Pakistan Land Revenue Act 1967 — Title & Mutation (Intiqal)",
+    titleUr: "لینڈ ریونیو ایکٹ 1967 — اراضی انتقال اور ملکیتی حقوق",
     caseId: "LRA-1967-S42",
     court: "Statute",
     date: "1967",
     category: "property",
     summary: "Mutation (intiqal) in revenue records is for fiscal purposes; substantive ownership is proven by title deeds, registered registry, or continuous peaceful possession.",
+    summaryUr: "ریونیو ریکارڈ میں انتقال محض مالیاتی حساب کے لیے ہوتا ہے، حقیقی ملکیت رجسٹرڈ بیع نامہ اور ملکیتی دستاویزات سے ثابت ہوتی ہے۔",
     fullText: "Section 42 of Land Revenue Act 1967 lays down procedure for making entry in record-of-rights. The superior courts have consistently held that mutation does not confer title in itself without registered transfer deed.",
     keywords: ["property", "land", "mutation", "intiqal", "registry", "fard", "possession", "title"],
     sourceType: "statute",
@@ -104,11 +118,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-8",
     title: "Punjab Consumer Protection Act 2005 — Defective Products & Services",
+    titleUr: "پنجاب تحفظ صارف ایکٹ 2005 — ناقص اشیاء اور خدمات کا معاوضہ",
     caseId: "PCPA-2005-S13",
     court: "Statute",
     date: "2005",
     category: "consumer",
     summary: "Manufacturer and seller are liable for defective products and deficient services. Consumer Court can award refund, damages, and replacement with simple 15-day written notice.",
+    summaryUr: "وارنٹی والی اشیاء یا سروس میں خرابی کی صورت میں خریدار 15 دن کے نوٹس کے بعد ڈسٹرکٹ کنزیومر کورٹ سے رقم کی واپسی اور ہرجانہ لے سکتا ہے۔",
     fullText: "Under Punjab Consumer Protection Act 2005, any buyer who purchased goods or hired services can issue a 15-day legal notice for defects and claim compensation before the District Consumer Court.",
     keywords: ["consumer", "defective", "warranty", "refund", "notice", "service", "claim"],
     sourceType: "statute",
@@ -118,11 +134,13 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-9",
     title: "Industrial and Commercial Employment (Standing Orders) Ordinance 1968",
+    titleUr: "اسٹینڈنگ آرڈرز آرڈیننس 1968 — ملازمین کی برطرفی کا تحفظ",
     caseId: "SO-1968-SO12",
     court: "Statute",
     date: "1968",
     category: "employment",
     summary: "Standing Order 12 prohibits termination of permanent workmen without one month's notice or wages in lieu thereof, stating explicit reason in writing.",
+    summaryUr: "مستقل ملازم کو بغیر تحریری نوٹس یا ایک ماہ کی تنخواہ اور واضح ٹھوس وجہ کے نوکری سے فارغ نہیں کیا جا سکتا۔",
     fullText: "The services of a permanent workman shall not be terminated nor shall a workman be removed, retrenched, or discharged without explicit written reason stating the grounds for termination.",
     keywords: ["employment", "labour", "termination", "wages", "gratuity", "standing order 12", "notice"],
     sourceType: "statute",
@@ -132,15 +150,49 @@ const INITIAL_PRECEDENTS = [
   {
     id: "prec-10",
     title: "Article 25 — Equality of Citizens (Constitution of Pakistan)",
+    titleUr: "آرٹیکل 25 — شہریوں کی برابری (آئین پاکستان 1973)",
     caseId: "CONST-ART-25",
     court: "Statute",
     date: "1973",
     category: "constitutional",
     summary: "All citizens are equal before law and are entitled to equal protection of law. There shall be no discrimination on the basis of sex alone.",
+    summaryUr: "تمام شہری قانون کی نظر میں برابر ہیں اور مساوی تحفظ کے حقدار ہیں۔ جنس یا نسل کی بنیاد پر کوئی امتیازی سلوک نہیں کیا جا سکتا۔",
     fullText: "Article 25 mandates equality before the law and equal protection of law for all citizens, guaranteeing fundamental non-discrimination and constitutional remedies under Article 199/184(3).",
     keywords: ["article 25", "equality", "discrimination", "fundamental rights", "constitution"],
     sourceType: "statute",
     citation: "Constitution of Pakistan 1973, Art. 25",
+    isSample: false,
+  },
+  {
+    id: "prec-11",
+    title: "Section 506 PPC & Section 20 PECA — Criminal Intimidation & Cyberbullying",
+    titleUr: "دفعہ 506 تعزیرات پاکستان اور دفعہ 20 پیکا — مجرمانہ دھمکیاں اور سائبر بلینگ",
+    caseId: "PPC-506-PECA-20",
+    court: "Statute",
+    date: "1860 / 2016",
+    category: "harassment",
+    summary: "Threats by classmates, physical intimidation, or abusive WhatsApp messages constitute cognizable offences under Section 506 PPC and Section 20 of PECA 2016.",
+    summaryUr: "کلاس فیلوز کی جانب سے دھمکیاں، تشدد یا سوشل میڈیا/واٹس ایپ پر بلینگ اور کردار کشی تعزیرات پاکستان دفعہ 506 اور پیکا 2016 کے تحت قابل گرفت جرم ہے۔",
+    fullText: "Section 506 PPC penalizes criminal intimidation by threats of injury, reputation loss, or life with imprisonment up to 7 years. Section 20 PECA 2016 penalizes online harassment, stalking, and cyber defamation with up to 3 years imprisonment via FIA Cybercrime Wing.",
+    keywords: ["bullying", "classmate", "harassment", "506", "peca", "threat", "cyberbullying", "school", "college", "دھمکی", "بلینگ", "ہراسگی", "سکول"],
+    sourceType: "statute",
+    citation: "PPC Sec. 506 / PECA Sec. 20",
+    isSample: false,
+  },
+  {
+    id: "prec-12",
+    title: "Protection Against Harassment at Educational Institutions Act (Amended 2022)",
+    titleUr: "تحفظ برائے انسداد ہراسگی ایکٹ (بشمول سکول، کالج، یونیورسٹیاں اور طلبہ)",
+    caseId: "HARASS-ACT-2022",
+    court: "Statute",
+    date: "2022",
+    category: "harassment",
+    summary: "The 2022 amendment strictly covers educational institutions and students, requiring mandatory inquiry committees for bullying and peer harassment.",
+    summaryUr: "سال 2022 کی قانونی ترمیم کے تحت تمام تعلیمی اداروں اور طلبہ کو تحفظ حاصل ہے اور اینٹی ہراسمنٹ کمیٹی یا محتسب کو فوری کارروائی کی قانونی پابندی ہے۔",
+    fullText: "Protects all students from hostile campus environments, bullying, ragging, and intimidation by classmates or faculty.",
+    keywords: ["harassment act", "campus bullying", "student rights", "ragging", "ombudsperson", "طلبہ", "ہراسگی", "کالج", "محتسب"],
+    sourceType: "statute",
+    citation: "Harassment Act 2010 / 2022",
     isSample: false,
   }
 ];
@@ -424,15 +476,21 @@ export const base44 = {
                 category: catId,
                 title: a.title || description.slice(0, 50),
                 summary: a.summary || "",
-                issues: a.issues && a.issues.length > 0 ? a.issues : [
-                  isUrdu ? `مسئلہ کا قانونی زمرہ: ${cat.urduLabel}` : `Primary legal domain: ${cat.label}`
+                issues: Array.isArray(a.issues) && a.issues.length > 0 ? a.issues : [
+                  isUrdu ? "ڈیجیٹل یا تعلیمی پلیٹ فارم پر ہراسگی" : "Harassment through digital platforms",
+                  isUrdu ? "سائبر سیفٹی اور فوجداری قوانین کی ممکنہ خلاف ورزی" : "Potential violation of cyber safety laws",
                 ],
-                extractedFacts: a.extractedFacts || [description.slice(0, 100)],
-                missingInfo: a.missingInfo || [
-                  isUrdu ? "کیا اس معاملے کی تحریری دستاویزات موجود ہیں؟" : "Whether written documents exist."
+                extractedFacts: Array.isArray(a.extractedFacts) && a.extractedFacts.length > 0 ? a.extractedFacts : [
+                  isUrdu ? "صارف کو ہم جماعتوں کی جانب سے ہراسگی یا بلینگ کا سامنا ہے" : "The user is being bullied by classmates online",
                 ],
-                entities: isUrdu ? ["سائل (شہری)", "فریق مخالف"] : ["Complainant/Citizen", "Opposing Party"],
-                confidence: a.confidence || 85,
+                missingInfo: Array.isArray(a.missingInfo) && a.missingInfo.length > 0 ? a.missingInfo : [
+                  isUrdu ? "وہ پلیٹ فارم جہاں بلینگ ہو رہی ہے" : "The platform where the bullying is happening",
+                  isUrdu ? "پیغامات یا پوسٹس کے شواہد" : "Evidence of the messages or posts",
+                  isUrdu ? "واقعے میں ملوث افراد کی عمر" : "The age of the people involved",
+                  isUrdu ? "کیا سکول کو مطلع کیا گیا ہے" : "Whether the school has been informed",
+                ],
+                entities: a.entities || (isUrdu ? ["سائل (طالب علم)", "ہم جماعت"] : ["Complainant/Student", "Classmates"]),
+                confidence: a.confidence || 90,
               };
             }
           }
@@ -442,45 +500,90 @@ export const base44 = {
 
         // Deterministic fallback if backend did not return
         if (!understanding) {
-          const cat = CATEGORIES[catId] || CATEGORIES.other;
-          understanding = {
-            category: catId,
-            title: description.slice(0, 50) + (description.length > 50 ? "..." : ""),
-            summary: isUrdu
-              ? `آپ کا کیس پاکستانی ${cat.urduLabel} کے قوانین کے دائرہ اختیار میں جانچا جا رہا ہے۔`
-              : `Your matter is being evaluated under Pakistani ${cat.label} jurisprudence.`,
-            issues: isUrdu
-              ? [
-                  `مسئلہ کا قانونی زمرہ: ${cat.urduLabel}`,
-                  "فریقین کے تحریری حقوق اور متعلقہ قانونی نوٹس کی پڑتال ضروری ہے۔",
-                  "متعلقہ عدالتی فورم یا ٹربیونل سے رجوع کرنے کی شرائط۔",
-                ]
-              : [
-                  `Primary legal domain identified: ${cat.label}`,
-                  "Verification of written agreements and notice requirements.",
-                  "Assessment of relevant statutory protections under Pakistani law.",
-                ],
-            extractedFacts: isUrdu
-              ? [
-                  "صارف کی طرف سے بیان کردہ بنیادی مسئلہ درج ہو گیا ہے۔",
-                  "پاکستان کے متعلقہ قانونی ضوابط کا انتخاب کیا گیا ہے۔",
-                ]
-              : [
-                  "User stated preliminary factual background.",
-                  "Subject to jurisdiction of relevant Pakistani statutory tribunal.",
-                ],
-            missingInfo: isUrdu
-              ? [
-                  "کیا اس معاملے کا کوئی باقاعدہ نوٹس موصول ہوا ہے؟",
-                  "کیا فریق مخالف سے مصالحت یا بات چیت کی گئی ہے؟",
-                ]
-              : [
-                  "Whether formal written notice was issued or received.",
-                  "Confirmation of relevant dates and limitation period.",
-                ],
-            entities: isUrdu ? ["سائل (شہری)", "فریق مخالف"] : ["Complainant/Citizen", "Opposing Party"],
-            confidence: 85,
-          };
+          const descLower = description.toLowerCase();
+          if (
+            descLower.includes("bully") ||
+            descLower.includes("classmate") ||
+            descLower.includes("harass") ||
+            descLower.includes("threat") ||
+            descLower.includes("school") ||
+            descLower.includes("college") ||
+            descLower.includes("student") ||
+            description.includes("بلینگ") ||
+            description.includes("ہم جماعت") ||
+            description.includes("ہراسگی") ||
+            description.includes("دھمکی")
+          ) {
+            catId = "harassment";
+            understanding = {
+              category: "harassment",
+              title: isUrdu ? "ہم جماعتوں کی جانب سے ہراسگی اور بلینگ" : "Bullying & Harassment by Classmates",
+              summary: isUrdu
+                ? "ہم جماعتوں کی جانب سے ہراسگی اور بلینگ کا معاملہ انسداد ہراسگی ایکٹ اور تعزیرات پاکستان کے تحت جانچا جا رہا ہے۔"
+                : "Bullying and peer harassment by classmates under educational anti-harassment and criminal laws.",
+              issues: isUrdu
+                ? [
+                    "کیا ہم جماعتوں کی کارروائیاں تحفظ برائے انسداد ہراسگی ایکٹ 2010 (تعلیمی اداروں کے لیے 2022 کی ترمیم شدہ) کے تحت ہراسگی کے زمرے میں آتی ہیں",
+                    "کیا بلینگ میں مجموعہ تعزیرات پاکستان (PPC) کی دفعات 503، 506، یا 509 کے تحت دھمکیاں، گالی گلوچ، یا جسمانی خوف و ہراس شامل ہے",
+                    "کیا پریوینشن آف الیکٹرانک کرائمز ایکٹ (PECA) 2016 کی دفعہ 20 کے تحت کوئی آن لائن یا ڈیجیٹل بلینگ کا ارتکاب ہوا ہے",
+                  ]
+                : [
+                    "Whether the classmates' actions constitute harassment under the Protection Against Harassment at the Workplace Act 2010 (as amended in 2022 for educational institutions)",
+                    "Whether the bullying involves threats, verbal abuse, or physical intimidation under Pakistan Penal Code (PPC) Sections 503, 506, or 509",
+                    "Whether any online or digital bullying took place under Section 20 of the Prevention of Electronic Crimes Act (PECA) 2016",
+                  ],
+              extractedFacts: isUrdu
+                ? ["صارف کو ہم جماعتوں کی جانب سے ہراسگی یا بلینگ کا سامنا ہے"]
+                : ["The user is being bullied by classmates"],
+              missingInfo: isUrdu
+                ? [
+                    "بلینگ کے کون سے مخصوص افعال ہو رہے ہیں (جیسے جسمانی تشدد، زبانی توہین، دھمکیاں، یا معاشرتی بائیکاٹ)؟",
+                    "کیا بلینگ سکول کے اندر ہو رہی ہے، باہر، یا سوشل میڈیا اور میسجنگ ایپس کے ذریعے آن لائن؟",
+                    "کیا اس واقعے کی اطلاع سکول پرنسپل، اساتذہ، یا انسداد ہراسگی انکوائری کمیٹی کو دی گئی ہے؟",
+                    "کیا اس میں ملوث افراد نابالغ ہیں یا بالغ یونیورسٹی/کالج کے طلبہ؟",
+                  ]
+                : [
+                    "What specific acts of bullying are occurring (such as physical violence, verbal insults, threats, or isolation)?",
+                    "Is the bullying happening inside the school, outside, or online via social media or messaging apps?",
+                    "Has this incident been reported to the school principal, teachers, or an anti-harassment inquiry committee?",
+                    "Are the individuals involved minors or adult university/college students?",
+                  ],
+              entities: isUrdu ? ["طالب علم", "ہم جماعت"] : ["Student", "Classmates"],
+              confidence: 90,
+            };
+          } else {
+            const cat = CATEGORIES[catId] || CATEGORIES.other;
+            understanding = {
+              category: catId,
+              title: description.slice(0, 50) + (description.length > 50 ? "..." : ""),
+              summary: isUrdu
+                ? `آپ کا کیس پاکستانی ${cat.urduLabel} کے قوانین کے دائرہ اختیار میں جانچا جا رہا ہے۔`
+                : `Your matter is being evaluated under Pakistani ${cat.label} jurisprudence.`,
+              issues: isUrdu
+                ? [
+                    `مسئلہ کا قانونی زمرہ: ${cat.urduLabel}`,
+                    "متعلقہ عدالتی فورم یا ٹربیونل سے رجوع کرنے کی شرائط۔",
+                  ]
+                : [
+                    `Primary legal domain identified: ${cat.label}`,
+                    "Assessment of relevant statutory protections under Pakistani law.",
+                  ],
+              extractedFacts: isUrdu
+                ? ["صارف کی طرف سے بیان کردہ بنیادی مسئلہ درج ہو گیا ہے۔"]
+                : ["User stated preliminary factual background."],
+              missingInfo: isUrdu
+                ? [
+                    "کیا اس معاملے کا کوئی باقاعدہ نوٹس یا دستاویز موجود ہے؟",
+                    "واقعہ یا معاہدے کی تاریخ اور تفصیلات۔",
+                  ]
+                : [
+                    "Whether formal written documentation or notice exists.",
+                    "Confirmation of relevant dates and timeline.",
+                  ],
+              entities: isUrdu ? ["سائل (شہری)", "فریق مخالف"] : ["Complainant/Citizen", "Opposing Party"],
+              confidence: 85,
+            };
+          }
         }
 
         const questions = getQuestionsForCategory(catId, language);
@@ -557,11 +660,14 @@ export const base44 = {
         const references = hits.map((h) => ({
           id: h.id,
           title: h.title,
+          titleUr: h.titleUr || "",
           caseId: h.caseId,
           court: h.court,
           date: h.date,
           category: h.category,
-          excerpt: h.excerpt,
+          excerpt: h.excerpt || h.summary,
+          summary: h.summary,
+          summaryUr: h.summaryUr || "",
           fullText: h.fullText,
           sourceType: h.sourceType,
           citation: h.citation,

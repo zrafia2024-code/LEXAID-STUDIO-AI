@@ -13,8 +13,9 @@ import { Label } from "@/components/ui/label";
 
 export default function Login() {
   const { login, loginWithGoogle } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const navigate = useNavigate();
+  const isUr = lang === "ur";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +28,7 @@ export default function Login() {
     e.preventDefault();
     setError("");
     if (!email || !password) {
-      setError("Please fill in all fields.");
+      setError(t("auth.fillAllFields"));
       return;
     }
     try {
@@ -35,7 +36,7 @@ export default function Login() {
       await login(email, password);
       navigate(safeReturnTo());
     } catch (err) {
-      setError(err.message || "Failed to sign in. Please check your credentials.");
+      setError(err.message || (isUr ? "لاگ ان کرنے میں ناکامی۔ براہ کرم اپنی تفصیلات چیک کریں۔" : "Failed to sign in. Please check your credentials."));
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ export default function Login() {
         setGoogleDetails(err.details || null);
         setShowGoogleModal(true);
       }
-      setError(err.message || "Google sign in failed.");
+      setError(err.message || (isUr ? "گوگل سائن ان میں مسئلہ آیا۔" : "Google sign in failed."));
     } finally {
       setLoading(false);
     }
@@ -61,13 +62,13 @@ export default function Login() {
   return (
     <AuthLayout
       icon={Scale}
-      title="Welcome back"
-      subtitle="Sign in to your LEXAID account"
+      title={t("auth.welcomeBack")}
+      subtitle={t("auth.signInSubtitle")}
       footer={
-        <span>
-          Don't have an account?{" "}
+        <span className={isUr ? "font-urdu" : ""}>
+          {t("auth.noAccount")}{" "}
           <Link to="/register" className="font-semibold text-primary hover:underline">
-            Register
+            {t("auth.register")}
           </Link>
         </span>
       }
@@ -101,9 +102,9 @@ export default function Login() {
         )}
 
         <div className="space-y-1.5">
-          <Label htmlFor="email">Email address</Label>
+          <Label htmlFor="email" className={isUr ? "font-urdu" : ""}>{t("auth.email")}</Label>
           <div className="relative">
-            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Mail className={`absolute ${isUr ? "right-3" : "left-3"} top-2.5 h-4 w-4 text-muted-foreground`} />
             <Input
               id="email"
               type="email"
@@ -111,23 +112,23 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="pl-9"
+              className={isUr ? "pr-9 pl-3 text-right font-urdu" : "pl-9 pr-3"}
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className={isUr ? "font-urdu" : ""}>{t("auth.password")}</Label>
             <Link
               to="/forgot-password"
-              className="text-xs text-primary hover:underline font-medium"
+              className={`text-xs text-primary hover:underline font-medium ${isUr ? "font-urdu" : ""}`}
             >
-              Forgot password?
+              {t("auth.forgotPassword")}
             </Link>
           </div>
           <div className="relative">
-            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Lock className={`absolute ${isUr ? "right-3" : "left-3"} top-2.5 h-4 w-4 text-muted-foreground`} />
             <Input
               id="password"
               type="password"
@@ -135,14 +136,14 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="pl-9"
+              className={isUr ? "pr-9 pl-3 text-right" : "pl-9 pr-3"}
             />
           </div>
         </div>
 
-        <Button type="submit" disabled={loading} className="w-full gap-2">
-          <span>{loading ? "Signing in..." : "Sign in"}</span>
-          <ArrowRight className="h-4 w-4" />
+        <Button type="submit" disabled={loading} className={`w-full gap-2 ${isUr ? "font-urdu" : ""}`}>
+          <span>{loading ? t("common.loading") : t("auth.signIn")}</span>
+          <ArrowRight className={`h-4 w-4 ${isUr ? "rotate-180" : ""}`} />
         </Button>
 
         <div className="relative my-4">
@@ -150,7 +151,7 @@ export default function Login() {
             <span className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+            <span className={`bg-card px-2 text-muted-foreground ${isUr ? "font-urdu" : ""}`}>{t("auth.orContinueWith")}</span>
           </div>
         </div>
 
@@ -160,10 +161,10 @@ export default function Login() {
             variant="outline"
             disabled={loading}
             onClick={handleGoogleLogin}
-            className="w-full gap-2"
+            className={`w-full gap-2 ${isUr ? "font-urdu" : ""}`}
           >
             <GoogleIcon className="h-4 w-4" />
-            <span>Google</span>
+            <span>{t("auth.googleSignIn")}</span>
           </Button>
           <div className="text-center">
             <button
@@ -171,10 +172,10 @@ export default function Login() {
               onClick={() => {
                 setShowGoogleModal(true);
               }}
-              className="text-[11px] text-muted-foreground hover:text-primary hover:underline inline-flex items-center gap-1"
+              className={`text-[11px] text-muted-foreground hover:text-primary hover:underline inline-flex items-center gap-1 ${isUr ? "font-urdu" : ""}`}
             >
               <HelpCircle className="h-3 w-3" />
-              <span>Google login setup instructions</span>
+              <span>{isUr ? "گوگل لاگ ان کی ترتیبات" : "Google login setup instructions"}</span>
             </button>
           </div>
         </div>

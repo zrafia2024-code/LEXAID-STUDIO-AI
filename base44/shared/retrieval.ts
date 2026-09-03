@@ -6,11 +6,13 @@
 export interface PrecedentRecord {
   id: string;
   title: string;
+  titleUr?: string;
   caseId?: string;
   court?: string;
   date?: string;
   category: string;
   summary: string;
+  summaryUr?: string;
   fullText?: string;
   keywords?: string[];
   sourceType?: string;
@@ -45,11 +47,13 @@ export function tokenize(text: string): string[] {
 export interface RetrievalHit {
   id: string;
   title: string;
+  titleUr?: string;
   caseId?: string;
   court?: string;
   date?: string;
   category: string;
   summary: string;
+  summaryUr?: string;
   fullText?: string;
   excerpt: string;
   sourceType?: string;
@@ -100,11 +104,13 @@ export function retrieve(
     hits.push({
       id: r.id,
       title: r.title,
+      titleUr: r.titleUr,
       caseId: r.caseId,
       court: r.court,
       date: r.date,
       category: r.category,
       summary: r.summary,
+      summaryUr: r.summaryUr,
       fullText: r.fullText || "",
       excerpt,
       sourceType: r.sourceType,

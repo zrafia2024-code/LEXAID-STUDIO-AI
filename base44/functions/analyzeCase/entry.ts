@@ -23,7 +23,7 @@ export default async function(req) {
       .map((c) => `${c.id} — ${c.label}`)
       .join("\n");
 
-    const prompt = `You are LEXAID, a legal-information assistant for Pakistan. 
+    const prompt = `You are LEXAID, a specialized legal-information assistant for Pakistan. 
 You do NOT give legal advice or predict outcomes.
 A citizen described a legal problem. Analyse it and return STRICT JSON only.
 
@@ -35,6 +35,9 @@ ${description}
 
 Choose the single most probable legal area from this list (use the id before the dash):
 ${categoryList}
+
+SPECIAL RULE FOR HARASSMENT & BULLYING:
+If the citizen describes bullying, ragging, threats, physical intimidation, isolation, insults, or blackmail by classmates, peers, seniors, teachers, or students, or online harassment, you MUST categorize it as "harassment".
 
 Return JSON with this shape:
 {
@@ -52,7 +55,7 @@ Rules:
 - Use VERY SIMPLE, everyday words that anyone can understand. No legal jargon. Short sentences.
 - Write each issue, fact and missing item as a simple sentence a beginner could understand.
 - If the area is unclear, use "other".
-- If the user language is Urdu (ur), you MUST write the title, issues, extractedFacts, missingInfo and entities in simple, easy Urdu. If English, write in simple English. Never mix languages.`;
+- If the user language is Urdu (ur), you MUST write the title, issues, extractedFacts, missingInfo and entities in simple, natural, fluent Urdu with ZERO English sentences. If English, write in simple English. Never mix languages.`;
 
     const llm = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,

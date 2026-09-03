@@ -146,8 +146,8 @@ export const CATEGORIES = {
   },
   criminal: {
     id: "criminal",
-    label: "Criminal Law",
-    urduLabel: "فوجداری قانون",
+    label: "Criminal",
+    urduLabel: "فوجداری",
     blurb: "FIR, arrest, bail, offences under the Penal Code and procedure.",
     urduBlurb: "ایف آئی آر، گرفتاری، ضمانت، پینل کوڈ اور طریقہ کار کے تحت جرائم۔",
     factors: [
@@ -547,6 +547,75 @@ export const CATEGORIES = {
       },
     ],
   },
+  harassment: {
+    id: "harassment",
+    label: "Harassment & Bullying",
+    urduLabel: "ہراسگی اور بلینگ",
+    blurb: "Classmate bullying, school/college harassment, ragging, cyberbullying, and criminal intimidation under Pakistani laws.",
+    urduBlurb: "کلاس فیلوز کی جانب سے دھمکیاں، سکول یا کالج میں ہراسگی، سائبر بلینگ اور بلیک میلنگ۔",
+    factors: [
+      {
+        key: "threats_or_abuse",
+        label: "Direct threats, bullying, or abusive behavior occurred",
+        urduLabel: "براہ راست دھمکیاں، بدسلوکی یا تشدد کا وقوعہ ہوا",
+        question: "Were physical violence, verbal abuse, or direct threats made by classmates or peers?",
+        urduQuestion: "کیا کلاس فیلوز یا کسی فرد کی جانب سے جسمانی تشدد، گالی گلوچ یا دھمکیاں دی گئیں؟",
+        why: "Criminal intimidation (Section 503/506 PPC) and assault are punishable criminal offences under Pakistani law.",
+        urduWhy: "دھمکیاں دینا (تعزیرات پاکستان دفعہ 506) اور تشدد قانونی طور پر قابل سزا جرم ہے۔",
+        type: "yesno",
+        weight: 18,
+        favorable: ["yes"],
+      },
+      {
+        key: "digital_or_written_proof",
+        label: "Digital evidence or witness proof exists",
+        urduLabel: "ڈیجیٹل شواہد (پیغامات/ویڈیو) یا گواہان موجود ہیں",
+        question: "Do you have proof such as WhatsApp messages, audio/video recordings, screenshots, or witnesses?",
+        urduQuestion: "کیا آپ کے پاس واٹس ایپ پیغامات، وائس نوٹس، ویڈیو، اسکرین شاٹس یا گواہان کے ثبوت ہیں؟",
+        why: "Electronic evidence is admissible under Qanun-e-Shahadat 1984 and PECA 2016 for cyber harassment investigations.",
+        urduWhy: "قانون شہادت 1984 اور پیکا ایکٹ 2016 کے تحت الیکٹرانک شواہد عدالت اور ایف آئی اے میں قابل قبول ہیں۔",
+        type: "yesno",
+        weight: 16,
+        favorable: ["yes"],
+      },
+      {
+        key: "reported_to_administration",
+        label: "Reported to school/college administration or harassment committee",
+        urduLabel: "سکول/کالج انتظامیہ یا اینٹی ہراسمنٹ کمیٹی کو شکایت درج کرائی گئی",
+        question: "Have you filed a formal written complaint to the school/college principal, disciplinary board, or harassment committee?",
+        urduQuestion: "کیا آپ نے سکول/کالج پرنسپل، ڈسپلن کمیٹی یا اینٹی ہراسمنٹ سیل کو تحریری شکایت دی ہے؟",
+        why: "Educational institutions in Pakistan are legally bound under Harassment Act 2022 to maintain inquiry committees and protect students.",
+        urduWhy: "اینٹی ہراسمنٹ ترمیمی ایکٹ 2022 کے تحت تمام تعلیمی ادارے طلبہ کے تحفظ اور فوری کارروائی کے قانونی پابند ہیں۔",
+        type: "yesno",
+        weight: 14,
+        favorable: ["yes"],
+      },
+      {
+        key: "cyber_harassment_involved",
+        label: "Online bullying, defamation, or social media harassment involved",
+        urduLabel: "آن لائن ہراسگی، سوشل میڈیا پر بدنامی یا بلیک میلنگ شامل ہے",
+        question: "Does the bullying involve social media, group chats, online threats, or non-consensual sharing of pictures?",
+        urduQuestion: "کیا اس میں واٹس ایپ، سوشل میڈیا، آن لائن گروپس میں کردار کشی یا تصویریں پھیلانے کا عمل شامل ہے؟",
+        why: "Section 20 of PECA 2016 specifically penalizes digital harassment, defamation, and cyberbullying via FIA Cybercrime Wing.",
+        urduWhy: "پیکا ایکٹ 2016 کی دفعہ 20 سوشل میڈیا اور انٹرنیٹ پر بلینگ اور کردار کشی پر ایف آئی اے کو فوری کارروائی کا اختیار دیتی ہے۔",
+        type: "yesno",
+        weight: 14,
+        favorable: ["yes"],
+      },
+      {
+        key: "impact_on_safety_or_education",
+        label: "Compromised personal safety, education, or mental well-being",
+        urduLabel: "تعلیم، ذاتی تحفظ یا ذہنی سکون شدید متاثر ہوا ہے",
+        question: "Has this situation prevented you from attending classes safely, or caused fear and distress?",
+        urduQuestion: "کیا اس کی وجہ سے آپ کے لیے کلاس میں جانا مشکل ہو گیا ہے یا شدید خوف اور ذہنی دباؤ پیدا ہوا ہے؟",
+        why: "Article 14 (Inviolability of Dignity) and Article 25A (Right to Education) of the Constitution guarantee a safe learning environment.",
+        urduWhy: "آئین پاکستان کا آرٹیکل 14 (عزت و وقار کا تحفظ) اور 25A پرامن اور محفوظ تعلیمی ماحول کا بنیادی حق دیتے ہیں۔",
+        type: "yesno",
+        weight: 12,
+        favorable: ["yes"],
+      },
+    ],
+  },
   other: {
     id: "other",
     label: "General Legal Matter",
@@ -615,6 +684,15 @@ export function normalizeCategory(raw) {
 
   // Urdu & English category mapping
   const map = {
+    // Bullying, Campus Harassment, Ragging, Cyberbullying, Intimidation -> Harassment
+    harassment: "harassment", bully: "harassment", bullied: "harassment", bullying: "harassment", classmate: "harassment", classmates: "harassment",
+    ragging: "harassment", harass: "harassment", "cyber bully": "harassment", cyberbullying: "harassment",
+    cyberbully: "harassment", intimidation: "harassment", threatened: "harassment", threat: "harassment", blackmail: "harassment",
+    "school bullying": "harassment", "college bullying": "harassment", student: "harassment", peers: "harassment", peca: "harassment",
+    "506": "harassment", "503": "harassment", "509": "harassment",
+    ہراسگی: "harassment", "تنگ کرنا": "harassment", دھمکی: "harassment", دھمکیاں: "harassment", بلینگ: "harassment", "کلاس فیلو": "harassment",
+    کلاس: "harassment", سکول: "harassment", کالج: "harassment", ریگنگ: "harassment", "بلیک میل": "harassment", "سائبر ہراسگی": "harassment", "بدسلوکی": "harassment",
+
     // Constitutional / Supreme Court / High Court
     constitutional: "constitutional", constitution: "constitutional", writ: "constitutional", fundamental: "constitutional", rights: "constitutional",
     supreme: "constitutional", "supreme court": "constitutional", "high court": "constitutional", "habeas corpus": "constitutional", judicial: "constitutional",
@@ -660,12 +738,16 @@ export function normalizeCategory(raw) {
 export function getQuestionsForCategory(categoryId, language) {
   const cat = CATEGORIES[categoryId] || CATEGORIES.other;
   return cat.factors.map((f) => ({
+    key: f.key,
     id: f.key,
     question: language === "ur" ? f.urduQuestion : f.question,
     why: language === "ur" ? f.urduWhy : f.why,
     type: f.type,
     options: f.options,
     label: language === "ur" ? f.urduLabel : f.label,
+    urduQuestion: f.urduQuestion,
+    urduWhy: f.urduWhy,
+    urduLabel: f.urduLabel,
   }));
 }
 

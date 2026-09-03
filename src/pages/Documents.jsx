@@ -150,7 +150,7 @@ export default function Documents() {
               {file ? file.name : t("documents.upload")}
             </p>
             <span className="text-xs text-muted-foreground mt-1">
-              Supports PDF, PNG, JPG, TXT (up to 10MB)
+              {isUr ? "پی ڈی ایف، تصاویر یا ٹیکسٹ فائلز (10MB تک)" : "Supports PDF, PNG, JPG, TXT (up to 10MB)"}
             </span>
           </div>
 
@@ -197,15 +197,15 @@ export default function Documents() {
         <Card className="p-6 space-y-6 bg-white border-slate-200 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-xs uppercase font-bold text-muted-foreground">
+              <span className={`text-xs uppercase font-bold text-muted-foreground ${isUr ? "font-urdu" : ""}`}>
                 {t("documents.appears")}
               </span>
-              <h2 className="text-xl font-bold text-foreground">
+              <h2 className={`text-xl font-bold text-foreground ${isUr ? "font-urdu text-2xl" : ""}`}>
                 {analysis.documentType}
               </h2>
             </div>
             <Badge variant="outline" className="text-xs">
-              Analyzed
+              {isUr ? "تجزیہ شدہ" : "Analyzed"}
             </Badge>
           </div>
 

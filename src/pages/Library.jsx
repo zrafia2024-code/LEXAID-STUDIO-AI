@@ -26,6 +26,7 @@ export default function Library() {
   const categories = [
     { value: "all", labelKey: "similar.all" },
     { value: "constitutional", labelKey: "categories.constitutional" },
+    { value: "harassment", labelKey: "categories.harassment" },
     { value: "tenancy", labelKey: "categories.tenancy" },
     { value: "family", labelKey: "categories.family" },
     { value: "criminal", labelKey: "categories.criminal" },
@@ -153,25 +154,25 @@ export default function Library() {
                 </div>
 
                 <div>
-                  <h3 className="text-base font-bold text-foreground">
-                    {item.title}
+                  <h3 className={`text-base font-bold text-foreground ${isUr ? "font-urdu text-lg" : ""}`}>
+                    {isUr && item.titleUr ? item.titleUr : item.title}
                   </h3>
                   {item.citation && (
-                    <p className="text-xs font-mono text-muted-foreground mt-0.5">
+                    <p className="text-xs font-mono text-muted-foreground mt-0.5" dir="ltr">
                       {item.citation}
                     </p>
                   )}
                 </div>
 
-                <p className="text-xs leading-relaxed text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                  {item.excerpt || item.summary}
+                <p className={`text-xs leading-relaxed text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100 ${isUr ? "font-urdu text-sm leading-relaxed" : ""}`}>
+                  {isUr && item.summaryUr ? item.summaryUr : (item.excerpt || item.summary)}
                 </p>
 
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-muted-foreground border-t border-slate-100">
                   <div className="flex items-center gap-4">
                     {item.court && (
                       <span>
-                        {t("common.court")}: <strong>{item.court}</strong>
+                        {t("common.court")}: <strong>{isUr && item.court === "Statute" ? "پاکستانی قانون / آئین" : item.court}</strong>
                       </span>
                     )}
                     {item.date && (
@@ -181,7 +182,7 @@ export default function Library() {
                     )}
                   </div>
                   {item.caseId && (
-                    <span className="font-mono text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-700">
+                    <span className="font-mono text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-700" dir="ltr">
                       {item.caseId}
                     </span>
                   )}
