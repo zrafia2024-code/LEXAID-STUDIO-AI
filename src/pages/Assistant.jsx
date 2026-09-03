@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Sparkles, Send, ArrowRight, RotateCcw, AlertCircle, CheckCircle2, Lightbulb } from "lucide-react";
+import { Sparkles, Send, ArrowRight, RotateCcw, AlertCircle, CheckCircle2, Lightbulb, Loader2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { base44 } from "@/api/base44Client";
 import VoiceInput from "@/components/VoiceInput";
@@ -182,12 +182,19 @@ export default function Assistant() {
                 type="submit"
                 size="lg"
                 disabled={analyzing || !description.trim()}
-                className="bg-primary text-primary-foreground gap-2 min-w-[140px]"
+                className={`gap-2 min-w-[140px] font-semibold transition-all ${
+                  analyzing
+                    ? "bg-amber-500 text-slate-950 disabled:opacity-100 shadow-md shadow-amber-500/20 cursor-wait"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90"
+                }`}
               >
                 {analyzing ? (
-                  <>
-                    <Loader label={t("assistant.analyzing")} />
-                  </>
+                  <span className="inline-flex items-center gap-2 text-slate-950 font-bold">
+                    <Loader2 className="h-4 w-4 animate-spin text-slate-950 shrink-0" />
+                    <span className={isUr ? "font-urdu" : ""}>
+                      {t("assistant.analyzing")}
+                    </span>
+                  </span>
                 ) : (
                   <>
                     <span>{t("assistant.submit")}</span>
@@ -288,11 +295,11 @@ export default function Assistant() {
               {/* Left Column: ISSUES IDENTIFIED */}
               <div className="space-y-3.5">
                 <div className="flex items-center justify-between">
-                  <h3 className={`text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 ${isUr ? "font-urdu" : ""}`}>
+                  <h3 className={`text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 ${isUr ? "font-urdu" : ""}`}>
                     {isUr ? "نشان دہی شدہ قانونی نکات" : "ISSUES IDENTIFIED"}
                   </h3>
                   {understanding.issues && understanding.issues.length > 0 && (
-                    <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
+                    <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-800/60">
                       {understanding.issues.length} {isUr ? "نکات" : "identified"}
                     </span>
                   )}
@@ -303,16 +310,16 @@ export default function Assistant() {
                     understanding.issues.map((iss, i) => (
                       <div
                         key={i}
-                        className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/60 hover:border-slate-300/80 transition-colors"
+                        className="flex items-start gap-3 p-3.5 rounded-xl bg-[#0B1322] border border-slate-800/80 hover:border-slate-700/80 transition-colors"
                       >
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600 mt-0.5 shrink-0" />
-                        <p className={`text-sm text-slate-700 leading-relaxed font-normal ${isUr ? "font-urdu text-base leading-relaxed" : ""}`}>
+                        <CheckCircle2 className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" />
+                        <p className={`text-sm text-slate-200 leading-relaxed font-normal ${isUr ? "font-urdu text-base leading-relaxed" : ""}`}>
                           {iss}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <div className="p-3 text-xs text-slate-500 italic bg-slate-50 rounded-lg">
+                    <div className="p-3 text-xs text-slate-400 italic bg-[#0B1322] border border-slate-800/80 rounded-xl">
                       {isUr ? "کوئی خاص قانونی مسئلہ اخذ نہیں کیا گیا۔" : "No specific statutory issues identified."}
                     </div>
                   )}
@@ -322,11 +329,11 @@ export default function Assistant() {
               {/* Right Column: INFORMATION THAT MAY BE MISSING */}
               <div className="space-y-3.5">
                 <div className="flex items-center justify-between">
-                  <h3 className={`text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 ${isUr ? "font-urdu" : ""}`}>
+                  <h3 className={`text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 ${isUr ? "font-urdu" : ""}`}>
                     {isUr ? "معلومات جو غائب ہو سکتی ہیں" : "INFORMATION THAT MAY BE MISSING"}
                   </h3>
                   {understanding.missingInfo && understanding.missingInfo.length > 0 && (
-                    <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-100">
+                    <span className="text-[11px] font-semibold text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-800/60">
                       {understanding.missingInfo.length} {isUr ? "پہلو" : "factors"}
                     </span>
                   )}
@@ -337,16 +344,16 @@ export default function Assistant() {
                     understanding.missingInfo.map((info, i) => (
                       <div
                         key={i}
-                        className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-50/30 border border-amber-200/50 hover:border-amber-300/70 transition-colors"
+                        className="flex items-start gap-3 p-3.5 rounded-xl bg-[#0B1322] border border-slate-800/80 hover:border-slate-700/80 transition-colors"
                       >
                         <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
-                        <p className={`text-sm text-slate-700 leading-relaxed font-normal ${isUr ? "font-urdu text-base leading-relaxed" : ""}`}>
+                        <p className={`text-sm text-slate-200 leading-relaxed font-normal ${isUr ? "font-urdu text-base leading-relaxed" : ""}`}>
                           {info}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <div className="p-3 text-xs text-slate-500 italic bg-slate-50 rounded-lg">
+                    <div className="p-3 text-xs text-slate-400 italic bg-[#0B1322] border border-slate-800/80 rounded-xl">
                       {isUr ? "تمام ابتدائی ضروری تفصیلات دستیاب ہیں۔" : "All initial baseline information is present."}
                     </div>
                   )}
