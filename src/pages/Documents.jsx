@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FileText, Upload, CheckCircle2, AlertTriangle, Calendar, HelpCircle } from "lucide-react";
+import { FileText, Upload, CheckCircle2, AlertTriangle, Calendar, HelpCircle, Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { base44 } from "@/api/base44Client";
 import Loader from "@/components/Loader";
@@ -177,10 +177,17 @@ export default function Documents() {
             <Button
               type="submit"
               disabled={!file || analyzing}
-              className="w-full sm:w-auto min-w-[160px] gap-2"
+              className={`w-full sm:w-auto min-w-[160px] gap-2 transition-colors ${
+                analyzing
+                  ? "bg-[#381F05] hover:bg-[#381F05] text-amber-500 border border-amber-600/30 disabled:opacity-100 cursor-wait shadow-sm"
+                  : ""
+              }`}
             >
               {analyzing ? (
-                <Loader label={t("documents.analyzing")} />
+                <span className="inline-flex items-center gap-2 text-amber-500 font-semibold">
+                  <Sparkles className="h-4 w-4 text-amber-500 shrink-0" />
+                  <span className={isUr ? "font-urdu" : ""}>{t("documents.analyzing")}</span>
+                </span>
               ) : (
                 <>
                   <FileText className="h-4 w-4" />

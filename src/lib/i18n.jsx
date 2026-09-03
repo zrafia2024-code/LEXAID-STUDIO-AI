@@ -111,7 +111,7 @@ const translations = {
       title: "Document Simplifier",
       subtitle: "Upload a legal document and get a plain-language breakdown.",
       upload: "Choose a document (PDF, image, or text)",
-      analyzing: "Analysing document…",
+      analyzing: "Analysing document...",
       appears: "What this document appears to be",
       simple: "Plain everyday explanation",
       simpleSubtitle: "Explained in everyday words, as if a knowledgeable friend is sitting right beside you.",
