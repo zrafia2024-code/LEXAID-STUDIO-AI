@@ -9,6 +9,7 @@ import {
   FileText,
   Settings as SettingsIcon,
   LogOut,
+  LogIn,
   Menu,
   X,
   ShieldCheck,
@@ -100,25 +101,39 @@ export default function Layout({ children }) {
 
       {/* Footer / User Profile & Logout */}
       <div className="pt-6 border-t border-slate-800 space-y-3">
-        {user && (
+        {user ? (
+          <>
+            <div className="px-2">
+              <p className="text-xs font-medium text-slate-200 truncate">
+                {user.full_name || user.email}
+              </p>
+              <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-slate-400 hover:bg-[#1e293b] hover:text-rose-300 transition ${
+                isUr ? "font-urdu text-sm" : ""
+              }`}
+            >
+              <LogOut className={`h-4 w-4 ${isUr ? "rotate-180" : ""}`} />
+              <span>{t("common.logout")}</span>
+            </button>
+          </>
+        ) : (
           <div className="px-2">
-            <p className="text-xs font-medium text-slate-200 truncate">
-              {user.full_name || user.email}
-            </p>
-            <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
+            <Link
+              to="/login"
+              className={`flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 px-3 py-2 text-xs font-medium transition ${
+                isUr ? "font-urdu text-sm" : ""
+              }`}
+            >
+              <LogIn className="h-3.5 w-3.5 text-amber-400" />
+              <span>{isUr ? "لاگ ان / سائن اپ" : "Sign In / Register"}</span>
+            </Link>
           </div>
         )}
-
-        <button
-          type="button"
-          onClick={handleLogout}
-          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-slate-400 hover:bg-[#1e293b] hover:text-rose-300 transition ${
-            isUr ? "font-urdu text-sm" : ""
-          }`}
-        >
-          <LogOut className={`h-4 w-4 ${isUr ? "rotate-180" : ""}`} />
-          <span>{t("common.logout")}</span>
-        </button>
       </div>
     </div>
   );

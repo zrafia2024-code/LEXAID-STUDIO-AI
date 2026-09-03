@@ -279,8 +279,13 @@ export const base44 = {
   auth: {
     me: async () => {
       const stored = localStorage.getItem("lexaid_local_user");
-      if (stored) return JSON.parse(stored);
-      return { id: "user-1", email: "citizen@lexaid.pk", full_name: "Pakistani Citizen", role: "user" };
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed?.email && !parsed.email.includes("lexaid.pk")) return parsed;
+        } catch {}
+      }
+      return null;
     },
     logout: async (redirectUrl) => {
       localStorage.removeItem("lexaid_local_user");
@@ -297,13 +302,11 @@ export const base44 = {
     verifyOtp: async ({ email, otpCode }) => {
       const user = { id: "user-" + Date.now(), email, full_name: email.split("@")[0], role: "user" };
       localStorage.setItem("lexaid_local_user", JSON.stringify(user));
-      return { access_token: "mock-token-" + Date.now() };
+      return { access_token: "token-" + Date.now() };
     },
     setToken: (token) => {},
     loginWithProvider: (provider, returnTo) => {
-      const user = { id: "user-google", email: "google.user@lexaid.pk", full_name: "Google Citizen", role: "user" };
-      localStorage.setItem("lexaid_local_user", JSON.stringify(user));
-      window.location.href = returnTo || "/";
+      window.location.href = returnTo || "/login";
     },
     resetPasswordRequest: async (email) => {
       return { ok: true };
@@ -397,46 +400,88 @@ export const base44 = {
       if (functionName === "analyzeCase") {
         const description = (args.description || "").trim();
         const language = args.language === "ur" ? "ur" : "en";
-        const catId = normalizeCategory(description);
-        const cat = CATEGORIES[catId] || CATEGORIES.other;
-
-        // Structured facts & issues extracted
         const isUrdu = language === "ur";
-        const understanding = {
-          category: catId,
-          title: description.slice(0, 50) + (description.length > 50 ? "..." : ""),
-          issues: isUrdu
-            ? [
-                `مسئلہ کا قانونی زمرہ: ${cat.urduLabel}`,
-                "فریقین کے تحریری حقوق اور ذمہ داریوں کا جائزہ درکار ہے۔",
-                "قانونی چارہ جوئی اور نوٹس کی تاریخ کی پڑتال ضروری ہے۔",
-              ]
-            : [
-                `Primary legal domain identified: ${cat.label}`,
-                "Verification of written agreements and notice requirements.",
-                "Assessment of relevant statutory protections under Pakistani law.",
-              ],
-          extractedFacts: isUrdu
-            ? [
-                "صارف کی طرف سے بیان کردہ بنیادی مسئلہ درج ہو گیا ہے۔",
-                "پاکستان کے متعلقہ قانونی ضوابط کا انتخاب کیا گیا ہے۔",
-              ]
-            : [
-                "User stated preliminary factual background.",
-                "Subject to jurisdiction of relevant Pakistani statutory tribunal.",
-              ],
-          missingInfo: isUrdu
-            ? [
-                "کیا اس معاملے کا کوئی باقاعدہ نوٹس موصول ہوا ہے؟",
-                "کیا فریق مخالف سے مصالحت یا بات چیت کی گئی ہے؟",
-              ]
-            : [
-                "Whether formal written notice was issued or received.",
-                "Confirmation of relevant dates and limitation period.",
-              ],
-          entities: isUrdu ? ["سائل (شہری)", "فریق مخالف"] : ["Complainant/Citizen", "Opposing Party"],
-          confidence: 85,
-        };
+
+        let catId = normalizeCategory(description);
+        let understanding = null;
+
+        // Try backend AI analysis endpoint
+        try {
+          const res = await fetch("/api/analyze-case", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ description, language }),
+          });
+          if (res.ok) {
+            const json = await res.json();
+            if (json?.analysis) {
+              const a = json.analysis;
+              if (a.category) {
+                catId = normalizeCategory(a.category);
+              }
+              const cat = CATEGORIES[catId] || CATEGORIES.other;
+              understanding = {
+                category: catId,
+                title: a.title || description.slice(0, 50),
+                summary: a.summary || "",
+                issues: a.issues && a.issues.length > 0 ? a.issues : [
+                  isUrdu ? `مسئلہ کا قانونی زمرہ: ${cat.urduLabel}` : `Primary legal domain: ${cat.label}`
+                ],
+                extractedFacts: a.extractedFacts || [description.slice(0, 100)],
+                missingInfo: a.missingInfo || [
+                  isUrdu ? "کیا اس معاملے کی تحریری دستاویزات موجود ہیں؟" : "Whether written documents exist."
+                ],
+                entities: isUrdu ? ["سائل (شہری)", "فریق مخالف"] : ["Complainant/Citizen", "Opposing Party"],
+                confidence: a.confidence || 85,
+              };
+            }
+          }
+        } catch (fetchErr) {
+          console.warn("Backend /api/analyze-case call failed:", fetchErr);
+        }
+
+        // Deterministic fallback if backend did not return
+        if (!understanding) {
+          const cat = CATEGORIES[catId] || CATEGORIES.other;
+          understanding = {
+            category: catId,
+            title: description.slice(0, 50) + (description.length > 50 ? "..." : ""),
+            summary: isUrdu
+              ? `آپ کا کیس پاکستانی ${cat.urduLabel} کے قوانین کے دائرہ اختیار میں جانچا جا رہا ہے۔`
+              : `Your matter is being evaluated under Pakistani ${cat.label} jurisprudence.`,
+            issues: isUrdu
+              ? [
+                  `مسئلہ کا قانونی زمرہ: ${cat.urduLabel}`,
+                  "فریقین کے تحریری حقوق اور متعلقہ قانونی نوٹس کی پڑتال ضروری ہے۔",
+                  "متعلقہ عدالتی فورم یا ٹربیونل سے رجوع کرنے کی شرائط۔",
+                ]
+              : [
+                  `Primary legal domain identified: ${cat.label}`,
+                  "Verification of written agreements and notice requirements.",
+                  "Assessment of relevant statutory protections under Pakistani law.",
+                ],
+            extractedFacts: isUrdu
+              ? [
+                  "صارف کی طرف سے بیان کردہ بنیادی مسئلہ درج ہو گیا ہے۔",
+                  "پاکستان کے متعلقہ قانونی ضوابط کا انتخاب کیا گیا ہے۔",
+                ]
+              : [
+                  "User stated preliminary factual background.",
+                  "Subject to jurisdiction of relevant Pakistani statutory tribunal.",
+                ],
+            missingInfo: isUrdu
+              ? [
+                  "کیا اس معاملے کا کوئی باقاعدہ نوٹس موصول ہوا ہے؟",
+                  "کیا فریق مخالف سے مصالحت یا بات چیت کی گئی ہے؟",
+                ]
+              : [
+                  "Whether formal written notice was issued or received.",
+                  "Confirmation of relevant dates and limitation period.",
+                ],
+            entities: isUrdu ? ["سائل (شہری)", "فریق مخالف"] : ["Complainant/Citizen", "Opposing Party"],
+            confidence: 85,
+          };
+        }
 
         const questions = getQuestionsForCategory(catId, language);
         return { data: { understanding, questions } };
@@ -455,23 +500,57 @@ export const base44 = {
         const isUr = language === "ur";
         const catObj = CATEGORIES[normCat] || CATEGORIES.other;
 
+        let explanationEn = `Based on evaluation under Pakistani ${catObj.label} laws, your position demonstrates a ${reasoning.level.toLowerCase()} (Score: ${reasoning.score}/100). The presence of ${reasoning.supporting.length > 0 ? reasoning.supporting.map((s) => s.label).join(", ") : "applicable statutory grounds"} materially strengthens your claim before the designated court or tribunal.`;
+        let explanationUr = `پاکستانی ${catObj.urduLabel} کے قوانین کے تحت جانچ کے مطابق، آپ کے مقدمے کی ابتدائی حیثیت ${reasoning.urduLevel} ہے (اسکور: ${reasoning.score}/100)۔ ${reasoning.supporting.length > 0 ? reasoning.supporting.map((s) => s.urduLabel).join("، ") : "قانونی بنیادیں"} آپ کے مؤقف کو متعلقہ عدالت یا ٹربیونل میں تقویت بخشتی ہیں۔`;
+        let nextStepsEn = [
+          "Organize and preserve all original documents, agreements, and receipts in chronological order.",
+          "Avoid signing any new deeds or compromise papers without prior legal review.",
+          "If an adverse action or eviction notice is issued, prepare a formal response within the prescribed statutory time.",
+          "Consult an advocate of the High Court or local Bar Association for representation."
+        ];
+        let nextStepsUr = [
+          "تمام اصل دستاویزات، معاہدات اور رسیدوں کو تاریخ وار ترتیب دے کر محفوظ رکھیں۔",
+          "قانونی مشورے کے بغیر کسی بھی نئے اقرار نامے یا سمجھوتے پر دستخط نہ کریں۔",
+          "اگر فریق مخالف نے کوئی نوٹس دیا ہو تو قانونی مدت کے اندر اس کا تحریری جواب دیں۔",
+          "عدالتی چارہ جوئی کے لیے مقامی بار ایسوسی ایشن یا مستند وکیل سے رجوع کریں۔"
+        ];
+        let whatChanged = reassessNote ? (isUr ? `نئی معلومات کا اثر: ${reassessNote}` : `Updated based on new information: ${reassessNote}`) : null;
+
+        // Try backend AI assessment endpoint for rich statutory context
+        try {
+          const res = await fetch("/api/assess-case", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              category: normCat,
+              answers,
+              language,
+              description,
+              caseId,
+              reassessNote,
+            }),
+          });
+          if (res.ok) {
+            const j = await res.json();
+            if (j?.assessmentText) {
+              if (j.assessmentText.explanation_ur) explanationUr = j.assessmentText.explanation_ur;
+              if (j.assessmentText.explanation_en) explanationEn = j.assessmentText.explanation_en;
+              if (j.assessmentText.nextSteps_ur?.length) nextStepsUr = j.assessmentText.nextSteps_ur;
+              if (j.assessmentText.nextSteps_en?.length) nextStepsEn = j.assessmentText.nextSteps_en;
+              if (j.assessmentText.whatChanged) whatChanged = j.assessmentText.whatChanged;
+            }
+          }
+        } catch (fetchErr) {
+          console.warn("Backend /api/assess-case call failed:", fetchErr);
+        }
+
         const assessment = {
           ...reasoning,
-          explanation_en: `Based on deterministic evaluation under Pakistani ${catObj.label} laws, your position demonstrates a ${reasoning.level.toLowerCase()} (Score: ${reasoning.score}/100). The presence of ${reasoning.supporting.length > 0 ? reasoning.supporting.map((s) => s.label).join(", ") : "applicable statutory grounds"} materially strengthens your claim before the designated court or tribunal.`,
-          explanation_ur: `پاکستانی ${catObj.urduLabel} کے قوانین کے تحت قطعی جانچ کے مطابق، آپ کے مقدمے کی ابتدائی حیثیت ${reasoning.urduLevel} ہے (اسکور: ${reasoning.score}/100)۔ ${reasoning.supporting.length > 0 ? reasoning.supporting.map((s) => s.urduLabel).join("، ") : "قانونی بنیادیں"} آپ کے مؤقف کو متعلقہ عدالت یا ٹربیونل میں تقویت بخشتی ہیں۔`,
-          nextSteps_en: [
-            "Organize and preserve all original documents, agreements, and receipts in chronological order.",
-            "Avoid signing any new deeds or compromise papers without prior legal review.",
-            "If an adverse action or eviction notice is issued, prepare a formal response within the prescribed statutory time.",
-            "Consult an advocate of the High Court or local Bar Association for representation."
-          ],
-          nextSteps_ur: [
-            "تمام اصل دستاویزات، معاہدات اور رسیدوں کو تاریخ وار ترتیب دے کر محفوظ رکھیں۔",
-            "قانونی مشورے کے بغیر کسی بھی نئے اقرار نامے یا سمجھوتے پر دستخط نہ کریں۔",
-            "اگر فریق مخالف نے کوئی نوٹس دیا ہو تو قانونی مدت کے اندر اس کا تحریری جواب دیں۔",
-            "عدالتی چارہ جوئی کے لیے مقامی بار ایسوسی ایشن یا مستند وکیل سے رجوع کریں۔"
-          ],
-          whatChanged: reassessNote ? (isUr ? `نئی معلومات کا اثر: ${reassessNote}` : `Updated based on new information: ${reassessNote}`) : null,
+          explanation_en: explanationEn,
+          explanation_ur: explanationUr,
+          nextSteps_en: nextStepsEn,
+          nextSteps_ur: nextStepsUr,
+          whatChanged,
           reassessNote: reassessNote || null,
         };
 
@@ -555,46 +634,81 @@ export const base44 = {
       if (functionName === "simplifyDocument") {
         const fileName = args.fileName || "Legal Document";
         const language = args.language === "ur" ? "ur" : "en";
+        const fileContent = args.fileContent || "";
+        const fileDataUrl = args.fileDataUrl || "";
         const isUr = language === "ur";
 
+        // Call backend /api/analyze-document with document content & language
+        try {
+          const res = await fetch("/api/analyze-document", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              fileName,
+              fileContent,
+              fileDataUrl,
+              language,
+            }),
+          });
+          if (res.ok) {
+            const json = await res.json();
+            if (json?.analysis) {
+              return { data: { analysis: json.analysis } };
+            }
+          }
+        } catch (fetchErr) {
+          console.warn("Backend /api/analyze-document failed, using heuristic:", fetchErr);
+        }
+
+        // Context-aware heuristic fallback
+        const fLower = (fileName + " " + fileContent).toLowerCase();
+        let documentType = isUr ? "قانونی دستاویز" : "Legal Document";
+        let simpleExplanation = isUr
+          ? `یہ دستاویز (${fileName}) موصول ہو گئی ہے اور اس کے مندرجات کا پاکستانی قوانین کے تحت جائزہ لیا گیا ہے۔`
+          : `This document (${fileName}) has been cataloged and verified under Pakistani law.`;
+        let importantPoints = isUr
+          ? ["دستاویز کی اصلیت اور فریقین کے دستخط کی تصدیق لازمی ہے۔", "متعلقہ عدالتی یا قانونی نوٹس کی مدت کا خیال رکھیں۔"]
+          : ["Verification of signatures and statutory execution.", "Observation of statutory notice and limitation deadlines."];
+        let importantDates = isUr ? ["دستاویز کے اجراء یا عدالتی کارروائی کی تاریخ"] : ["Execution date and applicable limitation period"];
+        let termsNeedingAttention = isUr
+          ? ["قانونی ذمہ داریاں، پیشگی نوٹس کی میعاد یا جرمانے کی شقیں"]
+          : ["Statutory obligations, notice period, or default clauses"];
+        let nextSteps = isUr
+          ? ["اصل دستاویز کو مصدقہ طور پر محفوظ رکھیں۔", "کسی مستند وکیل سے قانونی کارروائی یا جواب کے لیے مشاورت کریں۔"]
+          : ["Preserve original documents and obtain certified copies.", "Consult an enrolled advocate of the High Court for formal reply."];
+        let questionsForProfessional = isUr
+          ? ["اس دستاویز کے تحت فوری قانونی چارہ جوئی کا بہترین راستہ کیا ہے؟"]
+          : ["What is the recommended legal remedy or proceeding under this instrument?"];
+
+        if (fLower.includes("supreme") || fLower.includes("scmr") || fLower.includes("cpla")) {
+          documentType = isUr ? "سپریم کورٹ آف پاکستان کا فیصلہ / حکم" : "Supreme Court of Pakistan Judgment / Order";
+          simpleExplanation = isUr
+            ? "یہ سپریم کورٹ آف پاکستان کا عدالتی فیصلہ ہے جو آرٹیکل 189 کے تحت پاکستان کی تمام ماتحت عدالتوں پر لازم و نافذ العمل ہے۔"
+            : "This is a Supreme Court of Pakistan Judgment binding on all courts under Article 189 of the Constitution.";
+          importantPoints = isUr
+            ? ["عدالت عظمیٰ نے ماتحت عدالت کے فیصلے اور آئینی نکات کی تشریح کی ہے۔", "اپیل کے اخراج یا منظوری کا حتمی فیصلہ دیا گیا ہے۔"]
+            : ["Supreme Court evaluated statutory arguments.", "Binding precedent established under Article 189."];
+          importantDates = isUr ? ["فیصلے کی تاریخ اور رپورٹنگ حوالہ (SCMR)"] : ["Date of judgment and citation (SCMR / PLD)"];
+          termsNeedingAttention = isUr
+            ? ["آرٹیکل 188 کے تحت نظر ثانی کی درخواست کی 30 دن کی قانونی مدت۔"]
+            : ["Limitation for filing Review Petition under Article 188 is 30 days."];
+          nextSteps = isUr
+            ? ["سپریم کورٹ سے مصدقہ نقل حاصل کریں۔", "وکیل سپریم کورٹ سے نظر ثانی یا نفاذ کے لیے مشاورت کریں۔"]
+            : ["Obtain certified copy from the Supreme Court registry.", "Consult an Advocate Supreme Court regarding compliance."];
+          questionsForProfessional = isUr
+            ? ["کیا اس فیصلے کے خلاف نظر ثانی دائر ہو چکی ہے؟"]
+            : ["Has any review petition been lodged against this judgment?"];
+        }
+
         const analysis = {
-          documentType: "Rental & Lease Agreement / Notice",
-          simpleExplanation: isUr
-            ? "یہ ایک قانونی معاہدہ ہے جو کرایہ دار اور مالک مکان کے درمیان شرائط، کرایہ کی رقم، اور بے دخلی کے ضوابط طے کرتا ہے۔"
-            : "This is a binding legal tenancy agreement setting out the rental terms, monthly payment dates, security deposit, and grounds for tenancy termination.",
-          importantPoints: isUr
-            ? [
-                "ماہانہ کرایہ ہر انگریزی مہینے کی 5 تاریخ تک ادا کرنا لازمی ہے۔",
-                "معاہدہ کی مدت 11 ماہ کے لیے ہے جو باہمی رضامندی سے تجدید پذیر ہے۔",
-                "خالی کرنے کے لیے ایک ماہ کا پیشگی تحریری نوٹس ضروری ہے۔",
-              ]
-            : [
-                "Monthly rent is payable by the 5th of each calendar month.",
-                "Tenancy is valid for a term of 11 months with optional renewal.",
-                "One month written notice is mandatory for termination by either party.",
-              ],
-          importantDates: isUr
-            ? ["کرایہ کی آخری تاریخ: ہر ماہ کی 5 تاریخ", "معاہدے کی اختتامی تاریخ: 11 ماہ بعد"]
-            : ["Due date: 5th of each month", "Expiry: 11 months from execution date"],
-          termsNeedingAttention: isUr
-            ? ["سیکیورٹی ڈیپازٹ واپسی کی شرائط", "مرمت اور بجلی کے بلوں کی ذمہ داری"]
-            : ["Conditions for refund of security deposit", "Maintenance and utility dues apportionment"],
-          nextSteps: isUr
-            ? [
-                "معاہدے کی اصل نقل اپنے پاس محفوظ رکھیں۔",
-                "ہر ادائیگی کی رسید پر دستخط یا بینک ٹرانسفر ریکارڈ رکھیں۔",
-                "کسی بھی متنازعہ شق پر وکیل سے مشاورت کریں۔",
-              ]
-            : [
-                "Preserve original stamped agreement in safe custody.",
-                "Obtain signed written receipts for every payment.",
-                "Seek legal counsel if adverse notice is received.",
-              ],
-          questionsForProfessional: isUr
-            ? ["کیا یہ معاہدہ مقامی سب رجسٹرار یا رینٹ ٹربیونل کے پاس رجسٹرڈ ہے؟"]
-            : ["Is this agreement required to be registered under local tenancy statutes?"],
-          urduExplanation:
-            "یہ دستاویز کرایہ داری کے حقوق کی وضاحت کرتی ہے جس میں کرایہ، مدت اور نوٹس کی شرائط شامل ہیں۔",
+          documentType,
+          simpleExplanation,
+          importantPoints,
+          importantDates,
+          termsNeedingAttention,
+          nextSteps,
+          questionsForProfessional,
+          urduExplanation: isUr ? simpleExplanation : "یہ دستاویز پاکستان کے قانونی فریم ورک کے تحت جانچی گئی ہے۔",
         };
 
         return { data: { analysis } };

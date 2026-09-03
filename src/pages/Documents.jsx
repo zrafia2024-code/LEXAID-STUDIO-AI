@@ -59,8 +59,29 @@ export default function Documents() {
 
     try {
       setAnalyzing(true);
+
+      let fileContent = "";
+      let fileDataUrl = "";
+
+      try {
+        if (file.type.startsWith("text/") || file.name.endsWith(".txt")) {
+          fileContent = await file.text();
+        } else {
+          fileDataUrl = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result || "");
+            reader.onerror = () => resolve("");
+            reader.readAsDataURL(file);
+          });
+        }
+      } catch (readErr) {
+        console.warn("File read error:", readErr);
+      }
+
       const res = await base44.functions.invoke("simplifyDocument", {
         fileName: file.name,
+        fileContent,
+        fileDataUrl,
         language: lang,
       });
 
@@ -81,6 +102,17 @@ export default function Documents() {
       console.warn("Analyze document error:", err);
     } finally {
       setAnalyzing(false);
+    }
+  };
+
+  const handleSelectPastDoc = (doc) => {
+    try {
+      if (doc.analysis) {
+        const parsed = typeof doc.analysis === "string" ? JSON.parse(doc.analysis) : doc.analysis;
+        setAnalysis(parsed);
+      }
+    } catch (e) {
+      console.warn("Parse past doc analysis error:", e);
     }
   };
 
@@ -284,15 +316,24 @@ export default function Documents() {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             {documents.map((doc) => (
-              <Card key={doc.id} className="p-4 space-y-2 bg-white">
-                <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-accent shrink-0" />
-                  <span className="text-sm font-semibold text-foreground truncate">
-                    {doc.name}
-                  </span>
+              <Card
+                key={doc.id}
+                onClick={() => handleSelectPastDoc(doc)}
+                className="p-4 space-y-2 bg-white hover:border-primary/50 cursor-pointer transition shadow-xs"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 truncate">
+                    <FileText className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-sm font-semibold text-foreground truncate">
+                      {doc.name}
+                    </span>
+                  </div>
+                  <Badge variant="outline" className="text-[10px] shrink-0">
+                    {isUr ? "دیکھیں" : "View"}
+                  </Badge>
                 </div>
                 {doc.summary && (
-                  <p className="text-xs text-muted-foreground line-clamp-2">
+                  <p className={`text-xs text-muted-foreground line-clamp-2 ${isUr ? "font-urdu" : ""}`}>
                     {doc.summary}
                   </p>
                 )}

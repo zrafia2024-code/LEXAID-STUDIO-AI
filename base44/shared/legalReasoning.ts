@@ -633,7 +633,7 @@ export function normalizeCategory(raw) {
 
     // Tenancy & Rent
     tenancy: "tenancy", rent: "tenancy", landlord: "tenancy", tenant: "tenancy", eviction: "tenancy", lease: "tenancy",
-    کرایہ: "tenancy", کرایہ دار: "tenancy", "مالک مکان": "tenancy", "بے دخلی": "tenancy", "کرایہ نامہ": "tenancy", "رینٹ ٹربیونل": "tenancy",
+    کرایہ: "tenancy", "کرایہ دار": "tenancy", "مالک مکان": "tenancy", "بے دخلی": "tenancy", "کرایہ نامہ": "tenancy", "رینٹ ٹربیونل": "tenancy",
 
     // Family Law
     family: "family", divorce: "family", marriage: "family", mehar: "family", maintenance: "family", custody: "family", inheritance: "family", nikah: "family", khula: "family",
@@ -649,7 +649,7 @@ export function normalizeCategory(raw) {
 
     // Contract & Financial
     contract: "contract", agreement: "contract", cheque: "contract", debt: "contract", breach: "contract", loan: "contract", fraud: "contract", "489-f": "contract",
-    معاہدہ: "contract", چیک: "contract", قرض: "contract", رقم: "contract", فریب: "contract", فراڈ: "contract", لین دین: "contract", "بوگس چیک": "contract",
+    معاہدہ: "contract", چیک: "contract", قرض: "contract", رقم: "contract", فریب: "contract", فراڈ: "contract", "لین دین": "contract", "بوگس چیک": "contract",
   };
   for (const k in map) {
     if (r.includes(k)) return map[k];

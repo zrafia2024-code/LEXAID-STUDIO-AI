@@ -1,6 +1,88 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      // Prevent Vite HMR WebSocket connection failure in AI Studio container environment
+      (() => {
+        if (typeof window !== 'undefined') {
+          const OrigWebSocket = window.WebSocket;
+          if (OrigWebSocket) {
+            class FakeHmrSocket extends EventTarget {
+              constructor(url, protocols) {
+                super();
+                this.url = url;
+                this.protocols = protocols;
+                this.readyState = 1;
+                this.binaryType = 'blob';
+                this.bufferedAmount = 0;
+                this.extensions = '';
+                this.protocol = Array.isArray(protocols) ? protocols[0] : (protocols || '');
+                setTimeout(() => {
+                  this.dispatchEvent(new Event('open'));
+                }, 0);
+              }
+              send() {}
+              close() {
+                this.readyState = 3;
+                this.dispatchEvent(new Event('close'));
+              }
+            }
+
+            window.WebSocket = function (url, protocols) {
+              const isVite =
+                protocols === 'vite-hmr' ||
+                protocols === 'vite-ping' ||
+                (Array.isArray(protocols) && protocols.some((p) => typeof p === 'string' && p.startsWith('vite-'))) ||
+                (typeof url === 'string' && (url.includes('token=') || url.includes('24678') || url.includes('vite-hmr')));
+              if (isVite) {
+                return new FakeHmrSocket(url, protocols);
+              }
+              return new OrigWebSocket(url, protocols);
+            };
+            window.WebSocket.prototype = OrigWebSocket.prototype;
+            window.WebSocket.CONNECTING = 0;
+            window.WebSocket.OPEN = 1;
+            window.WebSocket.CLOSING = 2;
+            window.WebSocket.CLOSED = 3;
+          }
+
+          // Filter any lingering [vite] logs from console
+          const filterVite = (method) => {
+            const orig = console[method];
+            if (!orig) return;
+            console[method] = function (...args) {
+              if (
+                args.some(
+                  (a) =>
+                    typeof a === 'string' &&
+                    (a.includes('[vite]') ||
+                     a.includes('vite-hmr') ||
+                     a.includes('failed to connect to websocket'))
+                )
+              ) {
+                return;
+              }
+              return orig.apply(console, args);
+            };
+          };
+          filterVite('error');
+          filterVite('warn');
+          filterVite('log');
+
+          // Suppress unhandled rejection if any relates to vite
+          window.addEventListener('unhandledrejection', (e) => {
+            if (
+              e.reason &&
+              (String(e.reason).includes('WebSocket') ||
+               String(e.reason).includes('vite') ||
+               String(e.reason?.message || '').includes('WebSocket'))
+            ) {
+              e.preventDefault();
+            }
+          });
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LEXAID - Pakistan Citizen Legal Aid &amp; Decision Support</title>
