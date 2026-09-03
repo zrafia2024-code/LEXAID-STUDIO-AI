@@ -1,0 +1,10 @@
+{
+  "name": "LEXAID",
+  "description": "A citizen-focused legal information and decision-support PWA for Pakistan, providing plain-language legal assessments and document analysis based on Pakistani law.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

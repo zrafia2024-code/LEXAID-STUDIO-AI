@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "LEXAID Pakistan",
+  "short_name": "LEXAID",
+  "description": "Citizen legal information and decision-support PWA for Pakistan, providing plain-language legal assessments and document analysis.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf9f6",
+  "theme_color": "#121926",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "100x100",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "LegalDocument",
+  "type": "object",
+  "properties": {
+    "fileName": {
+      "type": "string",
+      "description": "Original uploaded file name"
+    },
+    "fileType": {
+      "type": "string",
+      "description": "MIME type"
+    },
+    "fileSize": {
+      "type": "number",
+      "description": "Size in bytes"
+    },
+    "fileUrl": {
+      "type": "string",
+      "description": "Uploaded file URL"
+    },
+    "extractedText": {
+      "type": "string",
+      "description": "Text extracted from the document"
+    },
+    "analysis": {
+      "type": "string",
+      "description": "JSON: structured simplification analysis"
+    },
+    "caseId": {
+      "type": "string",
+      "description": "Optional linked LegalCase id"
+    }
+  },
+  "required": [
+    "fileName"
+  ]
+}

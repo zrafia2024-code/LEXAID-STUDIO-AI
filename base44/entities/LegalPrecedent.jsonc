@@ -1,0 +1,63 @@
+{
+  "name": "LegalPrecedent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Case title or statute name"
+    },
+    "caseId": {
+      "type": "string",
+      "description": "Case identifier or statute code"
+    },
+    "court": {
+      "type": "string",
+      "description": "Court that decided the case, or 'Statute' for laws"
+    },
+    "date": {
+      "type": "string",
+      "description": "Date or year of the case / statute"
+    },
+    "category": {
+      "type": "string",
+      "description": "Legal category id"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Plain-language summary of the principle"
+    },
+    "fullText": {
+      "type": "string",
+      "description": "Longer passage / extracted text used for retrieval"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Retrieval keywords"
+    },
+    "sourceType": {
+      "type": "string",
+      "enum": [
+        "case",
+        "statute"
+      ],
+      "default": "case"
+    },
+    "citation": {
+      "type": "string",
+      "description": "Citation string if available"
+    },
+    "isSample": {
+      "type": "boolean",
+      "default": true,
+      "description": "True if this is representative sample data, not a verified primary source"
+    }
+  },
+  "required": [
+    "title",
+    "category",
+    "summary"
+  ]
+}

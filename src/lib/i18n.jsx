@@ -1,0 +1,406 @@
+import React, { createContext, useContext, useEffect, useState } from "react";
+
+const translations = {
+  en: {
+    appName: "LEXAID",
+    tagline: "Understand your legal rights — in plain language.",
+    pakistanOnly: "For Pakistan only — based on Pakistani law",
+    categories: {
+      tenancy: "Tenancy",
+      family: "Family",
+      criminal: "Criminal",
+      property: "Property",
+      consumer: "Consumer",
+      employment: "Employment",
+      contract: "Contract",
+      constitutional: "Constitutional",
+      other: "Other",
+    },
+    nav: {
+      home: "Home",
+      assistant: "Legal Assistant",
+      cases: "My Cases",
+      similar: "Reference Library",
+      documents: "Document Simplifier",
+      history: "History",
+      settings: "Settings",
+    },
+    disclaimer:
+      "LEXAID provides legal information and decision support, not legal advice. It is not a lawyer or a court and does not predict case outcomes. For binding action, consult a qualified lawyer.",
+    home: {
+      hero: "Describe your legal problem. Get a plain-language preliminary assessment based on the Constitution of Pakistan.",
+      start: "Start a new analysis",
+      browse: "Browse Constitution & laws",
+      howTitle: "How LEXAID works",
+      steps: [
+        "Describe your problem in your own words (English or Urdu).",
+        "LEXAID restates what it understood and asks a few focused questions.",
+        "It retrieves relevant articles of the Constitution of Pakistan and related laws as evidence.",
+        "A deterministic reasoning layer produces an explainable assessment.",
+        "You can simplify, switch language, upload a document, or reassess.",
+      ],
+      recent: "Recent cases",
+      noRecent: "No cases yet. Start your first analysis.",
+    },
+    assistant: {
+      title: "AI Legal Assistant",
+      placeholder: "Describe your legal problem in plain English or Urdu…",
+      submit: "Analyse",
+      understanding: "What LEXAID understood",
+      questions: "A few questions to sharpen the analysis",
+      why: "Why this matters",
+      answer: "Your answer",
+      yes: "Yes",
+      no: "No",
+      assess: "Get preliminary assessment",
+      back: "Back",
+      analyzing: "Understanding your problem…",
+      assessing: "Reasoning and retrieving evidence…",
+      category: "Probable area",
+      issues: "Issues identified",
+      facts: "Extracted facts",
+      missing: "Information that may be missing",
+      confidence: "Confidence",
+      options: {
+        granted: "Granted",
+        denied: "Denied",
+        not_applied: "Not applied",
+      },
+    },
+    assessment: {
+      title: "Preliminary assessment",
+      score: "Position strength",
+      confidence: "Confidence",
+      level: "Assessment",
+      supporting: "Supporting factors",
+      limiting: "Limiting factors",
+      missing: "Missing information",
+      rules: "Matched factors",
+      evidence: "Retrieved evidence",
+      reasoning: "How this was formed",
+      explanation: "Plain-language explanation",
+      reassess: "Add information / Reassess",
+      reassessPlaceholder: "Add new information or correct something…",
+      reassessSubmit: "Reassess",
+      reassessNote: "What changed",
+      previous: "Previous assessment",
+      updated: "Updated assessment",
+      noEvidence: "No directly matching references found in the library yet.",
+      aiNote:
+        "AI-generated explanation — not a legal authority. See retrieved evidence for source-backed information.",
+      nextSteps: "What to do next",
+      saveCase: "Save to my cases",
+      saved: "Saved to your cases",
+    },
+    similar: {
+      title: "Constitution & Laws",
+      subtitle:
+        "Search the Constitution of Pakistan and related laws. These are used as evidence when assessing your case.",
+      search: "Search by keyword or article…",
+      filter: "Filter by area",
+      all: "All areas",
+      noResults: "No references match your search.",
+      relevance: "Relevance",
+      sample: "Sample data",
+      statute: "Law",
+      case: "Case",
+      searchBtn: "Search",
+    },
+    documents: {
+      title: "Document Simplifier",
+      subtitle: "Upload a legal document and get a plain-language breakdown.",
+      upload: "Choose a document (PDF, image, or text)",
+      analyzing: "Analysing document…",
+      appears: "What this document appears to be",
+      simple: "Simple explanation",
+      points: "Important points",
+      dates: "Important dates",
+      terms: "Terms needing attention",
+      nextSteps: "What to do next",
+      questions: "Questions to ask a qualified professional",
+      urdu: "Urdu explanation",
+      empty: "No documents analysed yet.",
+      yourDocs: "Your documents",
+      linkCase: "Link to a case",
+      none: "None",
+    },
+    history: {
+      title: "Case History",
+      subtitle: "Your saved analyses and reassessments.",
+      empty: "No saved cases yet.",
+      open: "Open",
+      delete: "Delete",
+      reassessed: "Reassessed",
+      status: {
+        described: "Described",
+        questioned: "Questions answered",
+        assessed: "Assessed",
+        reassessed: "Reassessed",
+      },
+    },
+    settings: {
+      title: "Settings",
+      language: "Language",
+      english: "English",
+      urdu: "اردو",
+      voice: "Voice assistant",
+      voiceDesc: "Use your microphone to describe your problem.",
+      about: "About LEXAID",
+      aboutText:
+        "LEXAID is a citizen-focused legal information and decision-support PWA for Pakistan. It combines AI understanding with deterministic legal reasoning and a retrieval layer over Pakistani legal references.",
+    },
+    voice: {
+      start: "Speak",
+      stop: "Stop / Done",
+      listening: "Listening…",
+      notSupported: "Speech Recognition is not supported by this browser.",
+      denied: "Microphone access was denied. Please allow microphone in browser settings.",
+      notFound: "No microphone found. Please connect a microphone.",
+      silence: "No sound detected. Please speak closer to your microphone.",
+      micWorking: "Microphone active",
+      openInTab: "Open in new window for full microphone access",
+      langUrdu: "Urdu (اردو)",
+      langEng: "English",
+      interim: "Live words:",
+      retry: "Retry Mic",
+      networkError: "Speech service network issue. You can try opening in a new tab.",
+      helpTitle: "Microphone help",
+      helpDesc: "Allow microphone permissions in your browser address bar (lock/camera icon).",
+    },
+    common: {
+      loading: "Loading…",
+      error: "Something went wrong. Please try again.",
+      retry: "Retry",
+      cancel: "Cancel",
+      close: "Close",
+      delete: "Delete",
+      confirmDelete: "Delete this item? This cannot be undone.",
+      empty: "Nothing here yet.",
+      source: "Source",
+      court: "Court",
+      date: "Date",
+      id: "Identifier",
+      logout: "Log out",
+    },
+  },
+  ur: {
+    appName: "لیکزیڈ",
+    tagline: "اپنے قانونی حقوق کو آسان زبان میں سمجھیں۔",
+    pakistanOnly: "صرف پاکستان کے لیے — پاکستانی قانون پر مبنی",
+    categories: {
+      tenancy: "کرایہ داری",
+      family: "خاندان",
+      criminal: "فوجداری",
+      property: "جائداد",
+      consumer: "صارف",
+      employment: "روزگار",
+      contract: "معاہدہ",
+      constitutional: "آئینی",
+      other: "دیگر",
+    },
+    nav: {
+      home: "ہوم",
+      assistant: "قانونی معاون",
+      cases: "میرے مقدمات",
+      similar: "حوالہ جاتی لائبریری",
+      documents: "دستاویز سادہ ساز",
+      history: "تاریخ",
+      settings: "ترتیبات",
+    },
+    disclaimer:
+      "لیکزیڈ قانونی معلومات اور فیصلہ سہولت فراہم کرتا ہے، قانونی مشورہ نہیں۔ یہ وکیل یا عدالت نہیں اور مقدمے کے نتائج کی پیش گوئی نہیں کرتا۔ پابند عمل کے لیے مستند وکیل سے رجوع کریں۔",
+    home: {
+      hero: "اپنا قانونی مسئلہ بیان کریں۔ پاکستان کے آئین پر مبنی، آسان زبان میں ابتدائی جائزہ حاصل کریں۔",
+      start: "نیا تجزیہ شروع کریں",
+      browse: "آئین اور قوانین دیکھیں",
+      howTitle: "لیکزیڈ کیسے کام کرتا ہے",
+      steps: [
+        "اپنا مسئلہ اپنے الفاظ میں بیان کریں (انگریزی یا اردو)۔",
+        "لیکزیڈ سمجھا ہوا دہراتا ہے اور چند مختصر سوالات پوچھتا ہے۔",
+        "یہ پاکستان کے آئین کے متعلقہ آرٹیکل اور قوانین بطور ثبوت نکالتا ہے۔",
+        "ایک قطعی منطقی پرت وضاحتی جائزہ تیار کرتی ہے۔",
+        "آپ سادہ کر سکتے ہیں، زبان بدل سکتے ہیں، دستاویز اپ لوڈ کر سکتے ہیں یا دوبارہ جائزہ لے سکتے ہیں۔",
+      ],
+      recent: "حالیہ مقدمات",
+      noRecent: "ابھی کوئی مقدمہ نہیں۔ اپنا پہلا تجزیہ شروع کریں۔",
+    },
+    assistant: {
+      title: "اے آئی قانونی معاون",
+      placeholder: "...اپنا قانونی مسئلہ سادہ انگریزی یا اردو میں بیان کریں",
+      submit: "تجزیہ کریں",
+      understanding: "لیکزیڈ نے جو سمجھا",
+      questions: "تجزیہ کو مضبوط کرنے کے لیے چند سوالات",
+      why: "یہ کیوں اہم ہے",
+      answer: "آپ کا جواب",
+      yes: "ہاں",
+      no: "نہیں",
+      assess: "ابتدائی جائزہ حاصل کریں",
+      back: "واپس",
+      analyzing: "...آپ کا مسئلہ سمجھا جا رہا ہے",
+      assessing: "...منطق اور ثبوت نکالا جا رہا ہے",
+      category: "ممکنہ شعبہ",
+      issues: "شناخت شدہ مسائل",
+      facts: "نکالے گئے حقائق",
+      missing: "معلومات جو شاید غائب ہوں",
+      confidence: "یقین",
+      options: {
+        granted: "منظور",
+        denied: "مسترد",
+        not_applied: "درخواست نہیں دی گئی",
+      },
+    },
+    assessment: {
+      title: "ابتدائی جائزہ",
+      score: "حیثیت کی طاقت",
+      confidence: "یقین",
+      level: "جائزہ",
+      supporting: "حامی عوامل",
+      limiting: "روکنے والے عوامل",
+      missing: "غائب معلومات",
+      rules: "ملے ہوئے عوامل",
+      evidence: "نکالا گیا ثبوت",
+      reasoning: "یہ کیسے بنا",
+      explanation: "آسان زبان میں وضاحت",
+      reassess: "معلومات شامل کریں / دوبارہ جائزہ",
+      reassessPlaceholder: "...نئی معلومات شامل کریں یا کچھ درست کریں",
+      reassessSubmit: "دوبارہ جائزہ",
+      reassessNote: "کیا تبدیلی ہوئی",
+      previous: "پچھلا جائزہ",
+      updated: "نیا جائزہ",
+      noEvidence: "ابھی لائبریری میں براہ راست مماثل حوالہ جات نہیں ملے۔",
+      aiNote:
+        "اے آئی پیدا کردہ وضاحت — قانونی اتھارٹی نہیں۔ ماخذ معلومات کے لیے نکالا گیا ثبوت دیکھیں۔",
+      nextSteps: "آگے کیا کریں",
+      saveCase: "میرے مقدمات میں محفوظ کریں",
+      saved: "آپ کے مقدمات میں محفوظ ہو گیا",
+    },
+    similar: {
+      title: "آئین اور قوانین",
+      subtitle:
+        "پاکستان کے آئین اور متعلقہ قوانین میں تلاش کریں۔ یہ آپ کے مقدمے کے جائزے میں ثبوت کے طور پر استعمال ہوتے ہیں۔",
+      search: "...کلیدی لفظ یا آرٹیکل سے تلاش کریں",
+      filter: "شعبے سے فلٹر",
+      all: "تمام شعبے",
+      noResults: "آپ کی تلاش سے کوئی حوالہ نہیں ملا۔",
+      relevance: "متعلقیت",
+      sample: "نمونہ ڈیٹا",
+      statute: "قانون",
+      case: "مقدمہ",
+      searchBtn: "تلاش",
+    },
+    documents: {
+      title: "دستاویز سادہ ساز",
+      subtitle: "قانونی دستاویز اپ لوڈ کریں اور آسان زبان میں تفصیل حاصل کریں۔",
+      upload: "دستاویز منتخب کریں (پی ڈی ایف، تصویر یا متن)",
+      analyzing: "...دستاویز کا تجزیہ ہو رہا ہے",
+      appears: "یہ دستاویز کیا معلوم ہوتی ہے",
+      simple: "آسان وضاحت",
+      points: "اہم نکات",
+      dates: "اہم تاریخیں",
+      terms: "توجہ طلب اصطلاحات",
+      nextSteps: "آگے کیا کریں",
+      questions: "مستند پیشہ ور سے پوچھنے کے سوالات",
+      urdu: "اردو وضاحت",
+      empty: "ابھی کوئی دستاویز تجزیہ نہیں ہوئی۔",
+      yourDocs: "آپ کی دستاویزات",
+      linkCase: "کسی مقدمے سے جوڑیں",
+      none: "کوئی نہیں",
+    },
+    history: {
+      title: "مقدمات کی تاریخ",
+      subtitle: "آپ کے محفوظ تجزیے اور دوبارہ جائزے۔",
+      empty: "ابھی کوئی محفوظ مقدمہ نہیں۔",
+      open: "کھولیں",
+      delete: "حذف کریں",
+      reassessed: "دوبارہ جائزہ لیا گیا",
+      status: {
+        described: "بیان کردہ",
+        questioned: "سوالات کے جوابات",
+        assessed: "جائزہ لیا گیا",
+        reassessed: "دوبارہ جائزہ",
+      },
+    },
+    settings: {
+      title: "ترتیبات",
+      language: "زبان",
+      english: "English",
+      urdu: "اردو",
+      voice: "صوتی معاون",
+      voiceDesc: "اپنا مسئلہ بیان کرنے کے لیے مائیکروفون استعمال کریں۔",
+      about: "لیکزیڈ کے بارے میں",
+      aboutText:
+        "لیکزیڈ پاکستان کے شہریوں کے لیے قانونی معلومات اور فیصلہ سہولت کا پی ڈبلیو اے ہے۔ یہ اے آئی سمجھ کو قطعی قانونی منطق اور پاکستانی قانونی حوالہ جات کی بازیافت پرت کے ساتھ جوڑتا ہے۔",
+    },
+    voice: {
+      start: "بولیں",
+      stop: "مکمل / روکیں",
+      listening: "آواز سنی جا رہی ہے…",
+      notSupported: "اس براؤزر میں اسپیچ ریکگنیشن دستیاب نہیں ہے۔",
+      denied: "مائیکروفون کی اجازت بلاک ہے۔ براہ کرم براؤزر سیٹنگز میں مائیک کی اجازت دیں۔",
+      notFound: "کوئی مائیکروفون نہیں ملا۔ مائیک کا کنکشن چیک کریں۔",
+      silence: "کوئی آواز موصول نہیں ہوئی۔ براہ کرم مائیک کے قریب بولیں۔",
+      micWorking: "مائیک فعال ہے",
+      openInTab: "براہ راست مائیکروفون کے لیے نئے ٹیب میں کھولیں",
+      langUrdu: "اردو (پاکستان)",
+      langEng: "English",
+      interim: "لائیو الفاظ:",
+      retry: "دوبارہ مائیک آزمائیں",
+      networkError: "اسپیچ نیٹ ورک سروس میں مسئلہ۔ نئے ٹیب میں کوشش کریں۔",
+      helpTitle: "مائیکروفون رہنمائی",
+      helpDesc: "براؤزر کے ایڈریس بار میں کیمرہ/لاک آئیکن پر کلک کر کے مائیکروفون الاؤ کریں۔",
+    },
+    common: {
+      loading: "...لوڈ ہو رہا ہے",
+      error: "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔",
+      retry: "دوبارہ کوشش",
+      cancel: "منسوخ",
+      close: "بند کریں",
+      delete: "حذف کریں",
+      confirmDelete: "اس آئٹم کو حذف کریں؟ یہ واپس نہیں ہو گا۔",
+      empty: "ابھی کچھ نہیں۔",
+      source: "ماخذ",
+      court: "عدالت",
+      date: "تاریخ",
+      id: "شناخت کنندہ",
+      logout: "لاگ آؤٹ",
+    },
+  },
+};
+
+const I18nContext = createContext(null);
+
+function getNested(obj, path) {
+  return path.split(".").reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj);
+}
+
+export function I18nProvider({ children }) {
+  const [lang, setLangState] = useState(() => {
+    const saved = typeof localStorage !== "undefined" ? localStorage.getItem("lexaid_lang") : null;
+    return saved === "ur" ? "ur" : "en";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("lexaid_lang", lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+  }, [lang]);
+
+  const setLang = (l) => setLangState(l);
+
+  const t = (path) => {
+    const v = getNested(translations[lang], path);
+    return v !== undefined ? v : path;
+  };
+
+  return (
+    <I18nContext.Provider value={{ lang, setLang, t, dir: lang === "ur" ? "rtl" : "ltr" }}>
+      {children}
+    </I18nContext.Provider>
+  );
+}
+
+export function useI18n() {
+  const ctx = useContext(I18nContext);
+  if (!ctx) throw new Error("useI18n must be used within I18nProvider");
+  return ctx;
+}

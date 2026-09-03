@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="100" fill="#064e3b" />
+  <!-- Central Scales -->
+  <path d="M256 90 v280 M150 370 h212" stroke="#ffffff" stroke-width="20" stroke-linecap="round" />
+  <path d="M110 170 h292" stroke="#ffffff" stroke-width="20" stroke-linecap="round" />
+  <!-- Left Pan -->
+  <path d="M110 170 L60 260 h100 Z" fill="#34d399" stroke="#ffffff" stroke-width="10" stroke-linejoin="round" />
+  <line x1="110" y1="170" x2="60" y2="260" stroke="#ffffff" stroke-width="8" />
+  <line x1="110" y1="170" x2="160" y2="260" stroke="#ffffff" stroke-width="8" />
+  <!-- Right Pan -->
+  <path d="M402 170 L352 260 h100 Z" fill="#34d399" stroke="#ffffff" stroke-width="10" stroke-linejoin="round" />
+  <line x1="402" y1="170" x2="352" y2="260" stroke="#ffffff" stroke-width="8" />
+  <line x1="402" y1="170" x2="452" y2="260" stroke="#ffffff" stroke-width="8" />
+  <!-- Fulcrum & Base -->
+  <circle cx="256" cy="170" r="22" fill="#facc15" />
+  <path d="M200 420 h112" stroke="#34d399" stroke-width="16" stroke-linecap="round" />
+</svg>

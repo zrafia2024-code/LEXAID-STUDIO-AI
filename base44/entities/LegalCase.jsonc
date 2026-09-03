@@ -1,0 +1,63 @@
+{
+  "name": "LegalCase",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short label for the case"
+    },
+    "description": {
+      "type": "string",
+      "description": "The user's original natural-language legal problem"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "en",
+        "ur"
+      ],
+      "default": "en"
+    },
+    "category": {
+      "type": "string",
+      "description": "Legal category id from the reasoning engine"
+    },
+    "understanding": {
+      "type": "string",
+      "description": "JSON: structured AI understanding (issues, facts, entities, missing, confidence)"
+    },
+    "questions": {
+      "type": "string",
+      "description": "JSON: deterministic follow-up questions"
+    },
+    "answers": {
+      "type": "string",
+      "description": "JSON: question id -> answer"
+    },
+    "assessment": {
+      "type": "string",
+      "description": "JSON: deterministic assessment (score, supporting, limiting, missing, rules, explanation)"
+    },
+    "references": {
+      "type": "string",
+      "description": "JSON: retrieved precedent ids + relevance scores"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "described",
+        "questioned",
+        "assessed",
+        "reassessed"
+      ],
+      "default": "described"
+    },
+    "reassessmentNote": {
+      "type": "string",
+      "description": "Note added by user during reassessment"
+    }
+  },
+  "required": [
+    "description"
+  ]
+}
