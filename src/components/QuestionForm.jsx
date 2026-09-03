@@ -71,8 +71,8 @@ export default function QuestionForm({ questions = [], answers = {}, onChange, o
                           onClick={() => handleSelect(key, "yes")}
                           className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all border ${
                             currentVal === "yes"
-                              ? "bg-[#131f37] text-white border-[#131f37] shadow-xs"
-                              : "bg-white text-slate-800 border-slate-200 hover:bg-slate-50"
+                              ? "bg-amber-500 text-slate-950 font-bold border-amber-500 shadow-sm"
+                              : "bg-[#131B2C] text-slate-200 border-slate-700/80 hover:bg-[#1E293B]"
                           } ${isUr ? "font-urdu min-w-[70px]" : "min-w-[65px]"}`}
                         >
                           {isUr ? "ہاں" : "Yes"}
@@ -82,8 +82,8 @@ export default function QuestionForm({ questions = [], answers = {}, onChange, o
                           onClick={() => handleSelect(key, "no")}
                           className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all border ${
                             currentVal === "no"
-                              ? "bg-[#131f37] text-white border-[#131f37] shadow-xs"
-                              : "bg-white text-slate-800 border-slate-200 hover:bg-slate-50"
+                              ? "bg-amber-500 text-slate-950 font-bold border-amber-500 shadow-sm"
+                              : "bg-[#131B2C] text-slate-200 border-slate-700/80 hover:bg-[#1E293B]"
                           } ${isUr ? "font-urdu min-w-[70px]" : "min-w-[65px]"}`}
                         >
                           {isUr ? "نہیں" : "No"}
@@ -108,8 +108,8 @@ export default function QuestionForm({ questions = [], answers = {}, onChange, o
                             onClick={() => handleSelect(key, optVal)}
                             className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all border ${
                               isSelected
-                                ? "bg-[#131f37] text-white border-[#131f37] shadow-xs"
-                                : "bg-white text-slate-800 border-slate-200 hover:bg-slate-50"
+                                ? "bg-amber-500 text-slate-950 font-bold border-amber-500 shadow-sm"
+                                : "bg-[#131B2C] text-slate-200 border-slate-700/80 hover:bg-[#1E293B]"
                             } ${isUr ? "font-urdu" : ""}`}
                           >
                             {optLabel}

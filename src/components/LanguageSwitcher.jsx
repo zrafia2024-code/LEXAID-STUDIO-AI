@@ -8,25 +8,25 @@ export default function LanguageSwitcher({ compact = false }) {
 
   if (compact) {
     return (
-      <div className="inline-flex items-center rounded-md border bg-card p-0.5 shadow-sm">
+      <div className="inline-flex items-center rounded-xl border border-slate-800/90 bg-[#060B14] p-1 shadow-sm">
         <button
           type="button"
           onClick={() => setLang("en")}
-          className={`rounded px-2.5 py-1 text-xs font-semibold transition ${
+          className={`rounded-lg px-3 py-1 text-xs font-semibold transition ${
             lang === "en"
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:text-foreground"
+              ? "bg-[#1E293B] text-amber-400 shadow-sm border border-slate-700/60"
+              : "text-slate-400 hover:text-slate-200 border border-transparent"
           }`}
         >
-          EN
+          English
         </button>
         <button
           type="button"
           onClick={() => setLang("ur")}
-          className={`rounded px-2.5 py-1 text-xs font-semibold transition font-urdu ${
+          className={`rounded-lg px-3 py-1 text-xs font-semibold transition font-urdu ${
             lang === "ur"
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:text-foreground"
+              ? "bg-[#1E293B] text-amber-400 shadow-sm border border-slate-700/60"
+              : "text-slate-400 hover:text-slate-200 border border-transparent"
           }`}
         >
           اردو
@@ -37,12 +37,13 @@ export default function LanguageSwitcher({ compact = false }) {
 
   return (
     <div className="flex items-center gap-2">
-      <Languages className="h-4 w-4 text-muted-foreground" />
+      <Languages className="h-4 w-4 text-slate-400" />
       <Button
         type="button"
         variant={lang === "en" ? "default" : "outline"}
         size="sm"
         onClick={() => setLang("en")}
+        className={lang === "en" ? "bg-amber-500 text-slate-950 font-bold" : "border-slate-700 bg-slate-900 text-slate-200"}
       >
         English
       </Button>
@@ -51,7 +52,7 @@ export default function LanguageSwitcher({ compact = false }) {
         variant={lang === "ur" ? "default" : "outline"}
         size="sm"
         onClick={() => setLang("ur")}
-        className="font-urdu"
+        className={`font-urdu ${lang === "ur" ? "bg-amber-500 text-slate-950 font-bold" : "border-slate-700 bg-slate-900 text-slate-200"}`}
       >
         اردو
       </Button>

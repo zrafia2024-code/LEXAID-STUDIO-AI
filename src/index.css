@@ -2,34 +2,40 @@
 
 @layer base {
   :root {
-    --background: 40 33% 99%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 222 30% 14%;
-    --primary-foreground: 40 20% 98%;
-    --secondary: 40 20% 96%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 40 20% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 38 75% 42%;
-    --accent-foreground: 40 20% 98%;
-    --destructive: 0 84% 60%;
+    /* LEXAID Dark Theme Palette (Target: #020617/#030712 background, #0B1220 panels, #F59E0B warm gold accent) */
+    --background: 222 47% 4%;       /* #030712 / #020617 very dark navy / near-black */
+    --foreground: 210 40% 98%;      /* #F8FAFC crisp near-white */
+    --card: 222 47% 8%;            /* #0B1220 dark navy card surface */
+    --card-foreground: 210 40% 98%; /* #F8FAFC */
+    --popover: 222 47% 8%;         /* #0B1220 */
+    --popover-foreground: 210 40% 98%;
+    --primary: 38 92% 50%;          /* #F59E0B warm LEXAID orange/gold accent */
+    --primary-foreground: 222 47% 7%; /* #0B1220 dark high-contrast text on primary button */
+    --secondary: 222 40% 13%;       /* #131B2C dark navy secondary surface */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 222 40% 13%;          /* #131B2C */
+    --muted-foreground: 215 20% 65%; /* #94A3B8 light blue-gray */
+    --accent: 38 92% 50%;           /* #F59E0B warm gold */
+    --accent-foreground: 222 47% 7%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 222 30% 14%;
+    --border: 217 33% 17%;          /* #1E293B subtle dark blue-gray */
+    --input: 217 33% 17%;           /* #1E293B */
+    --ring: 38 92% 50%;             /* #F59E0B */
     --radius: 0.75rem;
   }
 
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background-color: #030712;
+    color: #CBD5E1;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Headings near-white */
+  h1, h2, h3, h4, h5, h6 {
+    color: #F8FAFC;
   }
 
   /* Ultra-clean, non-overlapping Arabic/Urdu typography for Pakistani citizens */
@@ -48,6 +54,104 @@
     line-height: 1.6;
     letter-spacing: normal;
   }
+}
+
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+}
+
+/* ==========================================================================
+   CENTRALIZED LEXAID DARK THEME ADAPTATIONS
+   Ensures cards, panels, inputs, and borders across all pages reflect dark navy
+   ========================================================================== */
+
+/* Layout background fallback */
+.bg-\[\#faf9f6\] {
+  background-color: #030712 !important;
+}
+
+/* Panels and Cards default to dark navy */
+.bg-white {
+  background-color: #0B1220 !important;
+  color: #CBD5E1;
+}
+
+/* Secondary muted surfaces */
+.bg-slate-50,
+.bg-slate-100 {
+  background-color: #0F172A !important;
+  color: #CBD5E1;
+}
+
+/* Borders in dark blue-gray */
+.border-slate-100,
+.border-slate-200,
+.border-slate-200\/80,
+.border-slate-200\/90,
+.border-slate-300 {
+  border-color: #1E293B !important;
+}
+
+/* Text hierarchy */
+.text-slate-900,
+.text-slate-800 {
+  color: #F8FAFC !important;
+}
+
+.text-slate-700 {
+  color: #CBD5E1 !important;
+}
+
+.text-slate-600,
+.text-slate-500 {
+  color: #94A3B8 !important;
+}
+
+/* Textarea & Inputs dark theme defaults */
+textarea,
+input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]) {
+  background-color: #0B1220 !important;
+  color: #F8FAFC !important;
+  border-color: #1E293B !important;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: #64748B !important;
+}
+
+/* Scrollbars in dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
 
 /* RTL Layout safety for fixed desktop sidebar */

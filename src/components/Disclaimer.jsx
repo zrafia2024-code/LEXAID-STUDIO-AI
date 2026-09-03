@@ -4,13 +4,19 @@ import { useI18n } from "@/lib/i18n";
 
 export default function Disclaimer() {
   const { t, lang } = useI18n();
+  const isUr = lang === "ur";
   return (
     <div
       role="note"
-      className="mb-6 flex items-start gap-3 rounded-lg border border-amber-300/60 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-100"
+      className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/30 bg-[#120E08] px-4 py-3.5 text-sm shadow-sm"
     >
-      <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden="true" />
-      <p className={lang === "ur" ? "font-urdu leading-relaxed" : "leading-relaxed"}>{t("disclaimer")}</p>
+      <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" aria-hidden="true" />
+      <p className={`leading-relaxed text-slate-200 ${isUr ? "font-urdu text-base" : ""}`}>
+        <strong className="font-semibold text-white">
+          {isUr ? "قانونی انتباہ: " : "Legal Disclaimer: "}
+        </strong>
+        {t("disclaimer")}
+      </p>
     </div>
   );
 }

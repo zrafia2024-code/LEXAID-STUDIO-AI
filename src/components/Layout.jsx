@@ -44,7 +44,7 @@ export default function Layout({ children }) {
   const isUr = lang === "ur";
 
   const SidebarContent = (
-    <div className="flex h-full flex-col justify-between bg-[#121926] text-slate-100 p-5">
+    <div className="flex h-full flex-col justify-between bg-[#0B1220] text-slate-100 p-5 border-r border-slate-800/60">
       <div className="space-y-6">
         {/* Brand Header */}
         <Link
@@ -52,19 +52,19 @@ export default function Layout({ children }) {
           onClick={() => setMobileOpen(false)}
           className="flex items-start gap-3 group"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-600 text-white shadow-md transition group-hover:scale-105">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20 transition group-hover:scale-105">
             <Scale className="h-5 w-5" />
           </div>
           <div className="space-y-0.5">
             <h1 className="text-xl font-bold tracking-tight text-white">LEXAID</h1>
-            <p className="text-[11px] leading-tight text-slate-400 line-clamp-2">
+            <p className="text-[11px] leading-tight text-amber-400/90 font-medium line-clamp-2">
               {t("tagline")}
             </p>
           </div>
         </Link>
 
         {/* Navigation Items */}
-        <nav className="space-y-1 pt-2">
+        <nav className="space-y-1.5 pt-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive =
@@ -77,14 +77,10 @@ export default function Layout({ children }) {
                 key={item.to}
                 to={item.to}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition ${
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition ${
                   isActive
-                    ? `bg-[#1e293b] text-white shadow-sm font-semibold ${
-                        isUr
-                          ? "border-r-2 border-l-0 border-amber-500"
-                          : "border-l-2 border-r-0 border-amber-500"
-                      }`
-                    : "text-slate-300 hover:bg-[#1e293b]/60 hover:text-white"
+                    ? "bg-[#162032] text-amber-400 border border-amber-500/50 shadow-sm font-semibold"
+                    : "text-slate-400 hover:bg-[#162032]/60 hover:text-slate-200 border border-transparent"
                 } ${isUr ? "font-urdu text-base" : ""}`}
               >
                 <Icon
@@ -99,11 +95,15 @@ export default function Layout({ children }) {
         </nav>
       </div>
 
-      {/* Footer / User Profile & Logout */}
-      <div className="pt-6 border-t border-slate-800 space-y-3">
+      {/* Footer / Language Switcher, User Profile & Logout */}
+      <div className="pt-5 border-t border-slate-800/80 space-y-3">
+        <div className="px-1">
+          <LanguageSwitcher compact />
+        </div>
+
         {user ? (
           <>
-            <div className="px-2">
+            <div className="px-2 pt-1">
               <p className="text-xs font-medium text-slate-200 truncate">
                 {user.full_name || user.email}
               </p>
@@ -113,7 +113,7 @@ export default function Layout({ children }) {
             <button
               type="button"
               onClick={handleLogout}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-slate-400 hover:bg-[#1e293b] hover:text-rose-300 transition ${
+              className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-xs font-medium text-slate-400 hover:bg-[#162032] hover:text-rose-300 transition ${
                 isUr ? "font-urdu text-sm" : ""
               }`}
             >
@@ -122,10 +122,10 @@ export default function Layout({ children }) {
             </button>
           </>
         ) : (
-          <div className="px-2">
+          <div className="px-1">
             <Link
               to="/login"
-              className={`flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 px-3 py-2 text-xs font-medium transition ${
+              className={`flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 px-3 py-2 text-xs font-medium transition ${
                 isUr ? "font-urdu text-sm" : ""
               }`}
             >
@@ -139,10 +139,10 @@ export default function Layout({ children }) {
   );
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-slate-900 flex flex-col md:flex-row antialiased">
+    <div className="min-h-screen bg-[#030712] text-slate-100 flex flex-col md:flex-row antialiased">
       {/* Desktop Left/Right Sidebar */}
       <aside
-        className={`app-sidebar-desktop hidden md:flex md:w-64 md:shrink-0 md:flex-col md:fixed md:inset-y-0 z-30 shadow-xl ${
+        className={`app-sidebar-desktop hidden md:flex md:w-64 md:shrink-0 md:flex-col md:fixed md:inset-y-0 z-30 shadow-2xl ${
           isUr ? "md:right-0 md:left-auto" : "md:left-0 md:right-auto"
         }`}
       >
@@ -153,11 +153,11 @@ export default function Layout({ children }) {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           />
           <div
-            className={`relative flex w-4/5 max-w-xs flex-1 flex-col bg-[#121926] shadow-2xl ${
+            className={`relative flex w-4/5 max-w-xs flex-1 flex-col bg-[#0B1220] shadow-2xl ${
               isUr ? "mr-0 ml-auto" : "ml-0 mr-auto"
             }`}
           >
@@ -166,7 +166,7 @@ export default function Layout({ children }) {
                 variant="ghost"
                 size="icon"
                 onClick={() => setMobileOpen(false)}
-                className="text-slate-300 hover:text-white"
+                className="text-slate-300 hover:text-white hover:bg-slate-800"
               >
                 <X className="h-5 w-5" />
               </Button>
@@ -183,23 +183,23 @@ export default function Layout({ children }) {
         }`}
       >
         {/* Top Navbar */}
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 md:px-8 backdrop-blur-md">
+        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-800/80 bg-[#030712]/85 px-4 md:px-8 backdrop-blur-md">
           {/* Left: Mobile Menu button + Pakistan Badge */}
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="p-2 text-slate-600 hover:text-slate-900 md:hidden rounded-lg hover:bg-slate-100"
+              className="p-2 text-slate-400 hover:text-white md:hidden rounded-lg hover:bg-slate-800"
               aria-label="Toggle Menu"
             >
               <Menu className="h-5 w-5" />
             </button>
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-300/80 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-600" />
-              <span className="font-bold">PK</span>
-              <span className="hidden sm:inline text-slate-600 font-normal">|</span>
-              <span className="truncate max-w-[240px] sm:max-w-none text-emerald-950 font-medium">
+            <div className="flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-950/60 px-3 py-1 text-xs font-medium text-emerald-300">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-400" />
+              <span className="font-bold text-emerald-200">PK</span>
+              <span className="hidden sm:inline text-emerald-600 font-normal">|</span>
+              <span className="truncate max-w-[240px] sm:max-w-none text-emerald-200 font-medium">
                 {t("pakistanOnly")}
               </span>
             </div>

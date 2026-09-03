@@ -51,9 +51,9 @@ export default function Home() {
   return (
     <div className="space-y-10">
       {/* Dark Navy Hero Section */}
-      <div className="relative overflow-hidden rounded-2xl bg-[#121926] p-8 text-white shadow-xl md:p-12">
+      <div className="relative overflow-hidden rounded-2xl bg-[#0B1322] border border-slate-800/80 p-8 text-white shadow-xl md:p-12">
         <div className="max-w-2xl space-y-5">
-          <div className="inline-flex items-center gap-2 rounded-lg bg-white/10 px-3 py-1 text-xs font-semibold text-amber-400 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-400">
             <Scale className="h-4 w-4" />
             <span>LEXAID</span>
           </div>
@@ -66,12 +66,12 @@ export default function Home() {
             <Button
               asChild
               size="lg"
-              className="bg-amber-600 hover:bg-amber-700 text-white font-semibold gap-2 shadow-lg"
+              className="bg-[#F59E0B] hover:bg-[#D97706] text-slate-950 font-bold gap-2 shadow-lg shadow-amber-500/20"
             >
               <Link to="/assistant">
-                <Sparkles className="h-4 w-4" />
+                <Sparkles className="h-4 w-4 text-slate-950" />
                 <span>{t("home.start")}</span>
-                <ArrowRight className={`h-4 w-4 ${isUr ? "rotate-180" : ""}`} />
+                <ArrowRight className={`h-4 w-4 text-slate-950 ${isUr ? "rotate-180" : ""}`} />
               </Link>
             </Button>
 
@@ -79,10 +79,10 @@ export default function Home() {
               asChild
               variant="outline"
               size="lg"
-              className="border-white/20 bg-white/5 text-white hover:bg-white/15 backdrop-blur-sm gap-2"
+              className="border-slate-700/80 bg-[#131B2C] text-slate-200 hover:bg-[#1C273C] hover:text-white gap-2"
             >
               <Link to="/library">
-                <BookOpen className="h-4 w-4" />
+                <BookOpen className="h-4 w-4 text-amber-400" />
                 <span>{t("home.browse")}</span>
               </Link>
             </Button>
@@ -92,7 +92,7 @@ export default function Home() {
 
       {/* How LEXAID Works Section (5 Numbered Cards) */}
       <section className="space-y-4">
-        <h2 className={`text-xl font-bold tracking-tight text-foreground ${isUr ? "font-urdu text-2xl" : ""}`}>
+        <h2 className={`text-xl font-bold tracking-tight text-white ${isUr ? "font-urdu text-2xl" : ""}`}>
           {t("home.howTitle")}
         </h2>
 
@@ -100,20 +100,20 @@ export default function Home() {
           {steps.map((stepText, idx) => (
             <Card
               key={idx}
-              className="relative flex flex-col justify-between overflow-hidden p-5 border-slate-200/80 bg-white shadow-sm hover:shadow-md transition"
+              className="relative flex flex-col justify-between overflow-hidden p-5 rounded-xl border border-slate-800/80 bg-[#0B1322] shadow-sm hover:border-slate-700 transition"
             >
               <div className="space-y-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/10 text-xs font-bold text-amber-700">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/15 border border-amber-500/30 text-xs font-bold text-amber-400">
                   {idx + 1}
                 </span>
-                <p className={`text-xs leading-relaxed text-slate-700 font-medium ${isUr ? "font-urdu text-sm" : ""}`}>
+                <p className={`text-xs leading-relaxed text-slate-300 font-medium ${isUr ? "font-urdu text-sm" : ""}`}>
                   {stepText}
                 </p>
               </div>
               <div
                 className={`absolute ${
                   isUr ? "left-3" : "right-3"
-                } top-2 text-4xl font-black text-slate-100 pointer-events-none select-none`}
+                } top-2 text-4xl font-black text-slate-800/30 pointer-events-none select-none`}
               >
                 {idx + 1}
               </div>
@@ -125,10 +125,10 @@ export default function Home() {
       {/* Recent Cases Section */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className={`text-xl font-bold tracking-tight text-foreground ${isUr ? "font-urdu text-2xl" : ""}`}>
+          <h2 className={`text-xl font-bold tracking-tight text-white ${isUr ? "font-urdu text-2xl" : ""}`}>
             {t("home.recent")}
           </h2>
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="ghost" size="sm" className="text-slate-400 hover:text-amber-400 hover:bg-slate-800/60">
             <Link to="/cases" className="gap-1">
               <span>{t("nav.cases")}</span>
               <ArrowRight className={`h-4 w-4 ${isUr ? "rotate-180" : ""}`} />
@@ -139,9 +139,9 @@ export default function Home() {
         {loading ? (
           <Loader />
         ) : cases.length === 0 ? (
-          <div className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground bg-white">
+          <div className="rounded-xl border border-dashed border-slate-800/80 p-8 text-center text-sm text-slate-400 bg-[#0B1322]">
             <p className={isUr ? "font-urdu" : ""}>{t("home.noRecent")}</p>
-            <Button asChild size="sm" className="mt-4" variant="outline">
+            <Button asChild size="sm" className="mt-4 border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800" variant="outline">
               <Link to="/assistant">{t("home.start")}</Link>
             </Button>
           </div>
