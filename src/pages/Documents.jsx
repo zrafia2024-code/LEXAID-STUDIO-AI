@@ -211,9 +211,14 @@ export default function Documents() {
 
           {/* Simple explanation */}
           <div className="space-y-2 bg-slate-50 p-4 rounded-lg border border-slate-100">
-            <h3 className="text-sm font-semibold text-primary">
-              {t("documents.simple")}
-            </h3>
+            <div className="flex flex-col gap-0.5">
+              <h3 className="text-sm font-semibold text-primary">
+                {t("documents.simple")}
+              </h3>
+              <p className={`text-xs text-muted-foreground ${isUr ? "font-urdu" : ""}`}>
+                {t("documents.simpleSubtitle")}
+              </p>
+            </div>
             <p className={`text-sm leading-relaxed text-slate-700 ${isUr ? "font-urdu" : ""}`}>
               {analysis.simpleExplanation}
             </p>

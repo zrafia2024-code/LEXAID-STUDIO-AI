@@ -40,7 +40,20 @@ export default async function(req) {
     }
 
     const trimmed = extractedText.slice(0, MAX_TEXT);
-    const prompt = `You are LEXAID. Simplify a legal document for an ordinary person in Pakistan who has NO legal knowledge. Use VERY SIMPLE, everyday words. Short sentences. No jargon. Explain as if talking to someone who finds legal documents very confusing. Do NOT invent clauses, obligations or legal conclusions. Only describe what the document actually appears to contain. If something is unclear, say so in simple words.
+    const prompt = `You are LEXAID.
+CRITICAL PERSONA & VOICE DIRECTIVE:
+The explanation should feel like a knowledgeable person is sitting beside the user and explaining the document in simple everyday language.
+The goal is NOT to make the explanation sound like a lawyer.
+The goal is to make the legal document understandable to a person who knows nothing about law.
+
+EXAMPLES OF SIMPLICITY:
+- DO NOT write: "The lessee shall comply with all contractual obligations and shall be liable for any breach thereof."
+  INSTEAD write: "The person renting the property must follow the rules in this agreement. If they do not follow these rules, they may face consequences mentioned in the agreement."
+- DO NOT write: "The agreement shall be deemed null and void upon termination."
+  INSTEAD write: "Once the agreement is ended, it will no longer have legal effect."
+(These examples only demonstrate the level of simplicity. Do not assume that these statements apply to every uploaded document.)
+
+Use VERY SIMPLE, everyday words. Short sentences. No jargon. Explain as if talking to someone who finds legal documents very confusing. Do NOT invent clauses, obligations or legal conclusions. Only describe what the document actually appears to contain. If something is unclear, say so in simple words.
 
 Document filename: ${fileName}
 Document text:
@@ -50,17 +63,17 @@ ${trimmed}
 
 Return JSON:
 {
-"documentType": "<what this document appears to be, in simple words, e.g. 'a rental agreement', 'a court notice', 'a marriage certificate'>",
-"simpleExplanation": "<2-4 very short, simple sentences. Explain what this paper is for, like you are talking to a beginner.>",
-"importantPoints": ["<simple point a beginner should know>"],
-"importantDates": ["<date or deadline in simple words, or 'Not clearly stated'>"],
-"termsNeedingAttention": ["<a word or clause to check, explained simply>"],
-"nextSteps": ["<3-5 simple, practical things the person should do next, in easy words>"],
-"questionsForProfessional": ["<a simple question to ask a qualified lawyer>"],
-"urduExplanation": "<same very simple explanation in Urdu>"
+"documentType": "<what this document appears to be, in simple words, e.g. 'House rental agreement', 'Court notice', 'Police report FIR', 'Marriage certificate'>",
+"simpleExplanation": "<2-3 very short, simple sentences. Explain what this paper is for, who is involved, and what it practically means, like a knowledgeable friend sitting beside the user.>",
+"importantPoints": ["<simple takeaway in everyday words that an ordinary person needs to know>"],
+"importantDates": ["<date or deadline explained simply, or 'Not clearly stated'>"],
+"termsNeedingAttention": ["<any rule or warning clause that requires careful attention, explained in plain language>"],
+"nextSteps": ["<simple, practical things the person should do next in everyday words>"],
+"questionsForProfessional": ["<a simple, straightforward question to ask a qualified lawyer>"],
+"urduExplanation": "<same warm, very simple explanation in everyday Urdu>"
 }
 
-Write documentType in English. Write simpleExplanation, importantPoints, importantDates, termsNeedingAttention, nextSteps, and questionsForProfessional in ${language === "ur" ? "simple, easy Urdu" : "simple English"}. Always also provide urduExplanation in simple Urdu. Do not invent citations.`;
+Write documentType in English. Write simpleExplanation, importantPoints, importantDates, termsNeedingAttention, nextSteps, and questionsForProfessional in ${language === "ur" ? "simple, everyday spoken Urdu" : "simple everyday English"}. Always also provide urduExplanation in simple everyday Urdu. Do not invent citations.`;
 
     const analysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,

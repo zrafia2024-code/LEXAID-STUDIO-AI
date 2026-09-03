@@ -277,42 +277,59 @@ app.post("/api/analyze-document", async (req, res) => {
     const ai = getGenAI("simplifier");
 
     // Prepare plain-language prompt for Pakistani legal document simplification
-    const systemPrompt = `You are Pakistan's premier Legal Document Plain-Language Translator and Citizen Advocate.
-Your mission is to make complex, intimidating Pakistani legal documents (court judgments, tenancy deeds, FIRs, bail orders, police notices, affidavits, powers of attorney, contracts, school/college notices) crystal clear and understandable to an ordinary person or 5th-grade student with ZERO legal education.
+    const systemPrompt = `You are a warm, knowledgeable, and caring guide helping an ordinary Pakistani citizen understand a legal document.
+CRITICAL PERSONA & VOICE DIRECTIVE:
+The explanation should feel like a knowledgeable person is sitting beside the user and explaining the document in simple everyday language.
+The goal is NOT to make the explanation sound like a lawyer.
+The goal is to make the legal document understandable to a person who knows nothing about law.
 
-CRITICAL SIMPLIFICATION QUALITY DIRECTIVES:
-1. SUPER EASY EVERYDAY LANGUAGE: Use short, friendly, clear sentences (10-12 words max per sentence). Completely avoid dense archaic legalese or confusing bureaucratic phrasing.
-2. JARGON TRANSLATION MANDATE: Whenever any legal technicality, Latin phrase, or procedural term appears (e.g., 'ex-parte', 'status quo', 'ad-interim injunction', 'stay order', 'prima facie', 'quashment', 'decree', 'cognizable', 'lis pendens', 'habeas corpus', 'limitation period'), you MUST immediately provide an everyday definition in square brackets [e.g. Injunction: a court order pausing all actions until the judge holds the next hearing].
-3. STATUTE & PRECEDENT ACCURACY: Ground your analysis in Pakistani law (Constitution of Pakistan, PPC, CrPC, Family Courts Act 1964, Tenancy Acts, PECA 2016, Harassment Acts). Check citations accurately.
-4. ZERO ENGLISH LEFTOVER IN URDU MODE:
+EXAMPLES OF THE LEVEL OF SIMPLICITY REQUIRED:
+- DO NOT write: "The lessee shall comply with all contractual obligations and shall be liable for any breach thereof."
+  INSTEAD write: "The person renting the property must follow the rules in this agreement. If they do not follow these rules, they may face consequences mentioned in the agreement."
+- DO NOT write: "The agreement shall be deemed null and void upon termination."
+  INSTEAD write: "Once the agreement is ended, it will no longer have legal effect."
+- DO NOT write: "The party of the first part hereby indemnifies the party of the second part against all claims."
+  INSTEAD write: "Person A promises to pay for any financial loss or damage that Person B suffers."
+- DO NOT write: "Ad-interim injunction was granted ex-parte subject to parawise comments."
+  INSTEAD write: "The court issued a temporary stop order freezing everything right away, until the other side submits their written reply."
+
+(Note: These examples are only to demonstrate the level of simplicity. Do not assume that these statements apply to every uploaded document.)
+
+RULES FOR EVERYDAY WORDS:
+1. Explain who the parties are in everyday terms (e.g. "the person renting the property" instead of "the lessee", "the property owner" instead of "the lessor", "the person who filed the complaint" instead of "the petitioner / complainant").
+2. No stiff, dense legalese or Latin phrases. If a legal term is mentioned, immediately explain what it actually means in plain English or simple Urdu in everyday terms.
+3. Keep sentences short, friendly, and crystal clear.
+4. Ground citations accurately in Pakistani law (Constitution, PPC, CrPC, Family Courts Act, Tenancy laws, PECA 2016).
+
+LANGUAGE REQUIREMENT:
 ${isUr 
-  ? "The user has selected URDU (اردو). You MUST write ALL fields in super-simple, natural, everyday spoken Urdu script (سلیس اور آسان بامحاورہ اردو). Absolutely NO English words or untranslated technical terms. Make it completely friendly and accessible to any Pakistani citizen."
-  : "The user has selected English. Write all fields in super-clear, plain conversational English at a 5th-grade reading level."
+  ? "The user has selected URDU (اردو). You MUST write ALL fields in super-simple, warm, natural everyday conversational Urdu (سلیس، آسان، عام فہم اور روزمرہ بول چال کی اردو). Imagine an elder brother or knowledgeable friend sitting next to the citizen and explaining the paper so clearly that even someone who cannot read difficult legal Urdu understands every single point. Absolutely NO heavy archaic words or untranslated technical jargon."
+  : "The user has selected English. Write all fields in super-clear, plain conversational English at a 5th-grade reading level as if sitting right beside them."
 }
 
 Conform strictly to this JSON format:
 {
-  "documentType": "${isUr ? "دستاویز کا انتہائی سادہ اور واضح نام (مثلاً: کرایہ نامہ، عدالت کا اسٹے آرڈر، پولیس ایف آئی آر، ہائی کورٹ رٹ پٹیشن، نوٹس)" : "Super clear document title (e.g., Eviction Notice, Supreme Court Order, Tenancy Agreement, Police Complaint, Bail Notice)"}",
-  "simpleExplanation": "${isUr ? "انتہائی آسان، سلیس اور عام فہم 2 سے 3 جملوں میں خلاصہ: یہ کاغذ اصل میں کیا ہے، کن افراد یا اداروں کے بارے میں ہے، اور اس کا آپ کی زندگی پر کیا اثر پڑے گا۔" : "2-3 super simple, friendly sentences explaining: What is this paper? Who are the parties? What does it practically mean for the citizen?"}",
+  "documentType": "${isUr ? "دستاویز کا انتہائی سادہ اور عام فہم نام (مثلاً: مکان کا کرایہ نامہ، عدالت کا اسٹے آرڈر، پولیس کی ایف آئی آر، ہائی کورٹ کی درخواست، نوٹس)" : "Simple, everyday document name (e.g., House Rental Agreement, Court Freeze Order, Police Report FIR, High Court Petition, Written Notice)"}",
+  "simpleExplanation": "${isUr ? "آسان، سلیس اور دوستانہ 2 سے 3 جملوں میں خلاصہ: جیسے آپ ساتھ بیٹھ کر سمجھا رہے ہوں کہ یہ کاغذ اصل میں کیا ہے، کن افراد کے بارے میں ہے، اور اس کا اس شخص پر کیا عملی اثر پڑے گا۔" : "2-3 simple, friendly everyday sentences explaining what this paper is, who is involved, and what it practically means for the person, like a knowledgeable person sitting right beside them."}",
   "importantPoints": [
-    "${isUr ? "آسان نکتہ 1: اس دستاویز کا بنیادی فیصلہ یا اہم ترین بات" : "Key simple takeaway 1: What does this paper mandate or decide?"}",
-    "${isUr ? "آسان نکتہ 2: رقم، جائیداد یا حقوق کی تفصیل" : "Key simple takeaway 2: Money, property, or obligations involved"}",
-    "${isUr ? "آسان نکتہ 3: کیا کرنا جائز ہے اور کس چیز سے روکا گیا ہے" : "Key simple takeaway 3: What is permitted or forbidden"}"
+    "${isUr ? "آسان نکتہ 1: اس کاغذ میں سب سے اہم بات یا اصول کیا طے ہوا ہے" : "Simple takeaway 1: What is the main rule, decision, or promise in this paper?"}",
+    "${isUr ? "آسان نکتہ 2: رقم، جائیداد یا حقوق کے بارے میں کیا لکھا ہے" : "Simple takeaway 2: What does it say about money, property, or responsibilities?"}",
+    "${isUr ? "آسان نکتہ 3: کیا کرنا لازم ہے اور کس بات کی ممانعت ہے" : "Simple takeaway 3: What must be done, and what is forbidden?"}"
   ],
   "importantDates": [
-    "${isUr ? "اہم تاریخ یا آخری مہلت (عدالتی پیشی، رقم کی ادائیگی یا جواب جمع کرانے کی آخری تاریخ)" : "Crucial dates or deadlines (court hearing, payment due date, reply deadline)"}"
+    "${isUr ? "آسان الفاظ میں اہم تاریخ یا ڈیڈ لائن (مثلاً: رقم جمع کرانے کا دن، عدالت میں پیشی کی تاریخ، یا جواب دینے کی آخری مہلت)" : "Important date or deadline explained simply (e.g., date rent is due, court hearing date, or last day to reply)"}"
   ],
   "termsNeedingAttention": [
-    "${isUr ? "اہم تنبیہ یا خطرہ جس پر فوری دھیان دینا ضروری ہے (مثلاً جرمانہ، بے دخلی یا قانونی چارہ جوئی کا اندیشہ)" : "Warning clause, financial liability, or penalty requiring immediate attention"}"
+    "${isUr ? "کوئی ایسی شرط یا تنبیہ جس پر دھیان دینا ضروری ہے (مثلاً جرمانہ، معاہدہ ختم ہونے کا خطرہ، یا قانونی کارروائی)" : "Any rule, penalty, or warning clause that requires careful attention, explained in plain words"}"
   ],
   "nextSteps": [
-    "${isUr ? "آج آپ کو کیا عملی قدم اٹھانا چاہیے 1 (پاکستانی قانون اور عدالتی طریقہ کار کے مطابق)" : "Practical step 1 to take right now under Pakistani legal procedure"}",
+    "${isUr ? "آسان اور عملی قدم 1 جو شہری کو ابھی اٹھانا چاہیے" : "Practical step 1 the person should take right now in simple language"}",
     "${isUr ? "عملی قدم 2" : "Practical step 2"}"
   ],
   "questionsForProfessional": [
-    "${isUr ? "اپنے وکیل یا قانونی مشیر سے پوچھنے کے لیے آسان اور ضروری سوالات" : "Practical questions to ask an enrolled advocate"}"
+    "${isUr ? "کسی وکیل یا قانونی مشیر سے پوچھنے کے لیے آسان اور واضح سوالات" : "Simple, friendly questions to ask a qualified lawyer without feeling confused or intimidated"}"
   ],
-  "urduExplanation": "${isUr ? "مکمل سلیس اردو خلاصہ" : "Urdu summary for bilingual reference"}"
+  "urduExplanation": "${isUr ? "مکمل سلیس اردو خلاصہ" : "Urdu summary for bilingual reference, in warm everyday Urdu"}"
 }`;
 
     if (ai) {
@@ -385,11 +402,12 @@ Conform strictly to this JSON format:
     }
 
     // High quality intelligent heuristic fallback if offline or no AI key
+    // Written in everyday language as if a knowledgeable person is sitting beside the user
     const docTextLower = (fileContent + " " + fileName).toLowerCase();
     let docType = isUr ? "قانونی دستاویز" : "Legal Document";
     let explanation = isUr
-      ? "اس دستاویز کا متن موصول ہو گیا ہے اور پاکستانی قانونی فریم ورک کے تحت عام فہم تجزیہ تیار کیا گیا ہے۔"
-      : "The uploaded legal document has been cataloged and simplified into plain language under Pakistani law.";
+      ? "یہ قانونی دستاویز موصول ہو گئی ہے۔ ہم نے اسے آسان الفاظ میں کھول کر دیکھا ہے تاکہ آپ کو کسی قسم کی الجھن نہ ہو اور آپ سمجھ سکیں کہ اس میں کیا لکھا ہے۔"
+      : "We looked over this document with you. It sets out the details of what was agreed or decided, and we have broken it down into simple everyday language so you know exactly where you stand.";
     let points: string[] = [];
     let dates: string[] = [];
     let terms: string[] = [];
@@ -411,37 +429,37 @@ Conform strictly to this JSON format:
       docTextLower.includes("بلینگ") ||
       docTextLower.includes("دھمکی")
     ) {
-      docType = isUr ? "ہراسگی، بلینگ یا سائبر شکایت کی دستاویز" : "Harassment, Bullying, or Cybercrime Notice/Complaint";
+      docType = isUr ? "ہراسگی، بلینگ یا آن لائن دھمکی کی شکایت" : "Complaint about Bullying, Harassment, or Online Threats";
       explanation = isUr
-        ? "یہ دستاویز کلاس فیلوز یا تعلیمی ادارے میں بلینگ، ہراسگی یا آن لائن دھمکیوں کی شکایت سے متعلق ہے۔ پاکستانی قانون (تعزیرات پاکستان دفعہ 506، پیکا ایکٹ دفعہ 20 اور تحفظ ہراسگی ایکٹ 2022) کے تحت طلبہ کو ہر قسم کی ہراسانی کے خلاف مکمل قانونی تحفظ حاصل ہے۔"
-        : "This document concerns harassment, bullying, or digital threats under Section 506 PPC (Criminal Intimidation), PECA 2016 Section 20, and the Protection Against Harassment Act 2022. Students and learners have statutory protections against intimidation and abuse.";
+        ? "یہ کاغذ کسی طالب علم یا شخص کو اسکول، کالج یا انٹرنیٹ پر تنگ کرنے، بلینگ کرنے یا دھمکیاں دینے کی شکایت سے متعلق ہے۔ آسان بات یہ ہے کہ پاکستانی قانون کے تحت کسی کو بھی ڈرانا، دھمکانا یا ہراساں کرنا سختی سے منع ہے، اور یہ کاغذ حکام سے مدد اور تحفظ مانگ رہا ہے۔"
+        : "This paper is about someone reporting bullying, harassment, or online threats (at school, college, or on social media). In simple everyday terms: under Pakistani law, no one is allowed to intimidate or harass students, and this complaint asks the authorities to step in and keep everyone safe.";
       points = isUr
         ? [
-            "بلینگ، مجرمانہ دھمکی یا آن لائن توہین آمیز پیغامات کا حوالہ دیا گیا ہے۔",
-            "ادارے کی انکوائری کمیٹی یا پولیس/ایف آئی اے کے دائرہ اختیار میں آتا ہے۔",
-            "متاثرہ طالب علم کو آئین کے آرٹیکل 14 (عزت و وقار) کے تحت قانونی تحفظ حاصل ہے۔",
+            "اس میں بتایا گیا ہے کہ کس شخص نے کس بات پر شکایت کی ہے اور کیا دھمکی یا بدسلوکی ہوئی۔",
+            "ادارے کی انکوائری کمیٹی، پولیس یا ایف آئی اے سائبر کرائم ونگ اس معاملے کی جانچ کرے گی۔",
+            "آئین کے تحت ہر طالب علم اور شہری کو عزت، وقار اور تحفظ کے ساتھ رہنے کا پورا حق ہے۔",
           ]
         : [
-            "Specific allegations of harassment, threats, or cyberbullying documented.",
-            "Subject to institutional anti-harassment inquiry or criminal investigation under PPC/PECA.",
-            "Guaranteed constitutional protection of personal dignity under Article 14.",
+            "It explains what happened, who complained, and what specific threats or bullying took place.",
+            "The school or college inquiry committee, police, or FIA cybercrime wing must look into the complaint.",
+            "Every student and citizen has the legal right to feel safe and protected from intimidation.",
           ];
-      dates = isUr ? ["شکایت درج کرانے کی تاریخ یا انکوائری کمیٹی کے سامنے پیشی کی تاریخ"] : ["Date of incident/complaint or inquiry hearing schedule"];
+      dates = isUr ? ["وہ تاریخ جب واقعہ پیش آیا، یا انکوائری کمیٹی کے سامنے پیش ہونے کا دن"] : ["The date when the incident happened, or when the inquiry meeting takes place"];
       terms = isUr
-        ? ["دھمکیوں اور پیغامات کے تمام ڈیجیٹل اسکرین شاٹس اور تحریری ثبوت محفوظ رکھنا قانونی طور پر لازمی ہے۔"]
-        : ["Mandatory to preserve electronic evidence (WhatsApp chats, call logs, emails) securely."];
+        ? ["دھمکی آمیز پیغامات، وائس نوٹس یا واٹس ایپ چیٹس کے تمام اسکرین شاٹس بطور ثبوت سنبھال کر رکھنا بہت ضروری ہے۔"]
+        : ["Make sure to save clear screenshots or recordings of all messages, calls, or emails as proof."];
       nextSteps = isUr
         ? [
-            "سکول یا کالج کے پرنسپل اور انسدادِ ہراسگی کمیٹی کو باقاعدہ تحریری درخواست پیش کریں۔",
-            "سنگین دھمکیوں پر تھانے (PPC 506) یا سائبر ہراسگی کے لیے ایف آئی اے (ہیلپ لائن 1991) کو مطلع کریں۔",
+            "اسکول یا کالج کے پرنسپل اور ہراسگی کمیٹی کو اس شکایت کی ایک تحریری کاپی باقاعدہ جمع کروائیں۔",
+            "اگر جان یا سلامتی کا خطرہ ہو تو فوری تھانے یا ایف آئی اے ہیلپ لائن (1991) پر اطلاع دیں۔",
           ]
         : [
-            "Submit a formal written complaint to the school/college anti-harassment committee.",
-            "Report physical threats to local police (PPC 506) or cyber abuse to FIA Cybercrime Wing.",
+            "Hand an official copy of the complaint to the head of the school or college inquiry committee.",
+            "If there is any threat to personal safety, contact the local police or call the FIA Helpline (1991).",
           ];
       questions = isUr
-        ? ["کیا تعلیمی ادارے میں 2022 کے قانون کے تحت باقاعدہ انکوائری کمیٹی تشکیل دی جا چکی ہے؟"]
-        : ["Has the academic institution convened a statutory inquiry committee under the Harassment Act?"];
+        ? ["کیا اسکول یا کالج نے دونوں فریقوں کی بات سننے کے لیے باقاعدہ کمیٹی قائم کر دی ہے؟"]
+        : ["Has the school or college set up an official committee to listen to both sides and resolve this?"];
     } else if (
       docTextLower.includes("supreme court") ||
       docTextLower.includes("scmr") ||
@@ -449,70 +467,72 @@ Conform strictly to this JSON format:
       docTextLower.includes("appeal") ||
       fileName.toLowerCase().includes("supreme")
     ) {
-      docType = isUr ? "سپریم کورٹ آف پاکستان کا فیصلہ / عدالتی حکم" : "Supreme Court of Pakistan Judgment / Appellate Order";
+      docType = isUr ? "سپریم کورٹ آف پاکستان کا حتمی عدالتی فیصلہ" : "Supreme Court of Pakistan Final Decision";
       explanation = isUr
-        ? "یہ سپریم کورٹ آف پاکستان کا حتمی عدالتی فیصلہ ہے [Ratio Decidendi یعنی فیصلے کی بنیاد بننے والا قانونی اصول]۔ آئین پاکستان کے آرٹیکل 189 کے تحت سپریم کورٹ کا فیصلہ ملک کی تمام عدالتوں اور تمام شہریوں پر لازمی لاگو ہوتا ہے۔"
-        : "This document is a Supreme Court of Pakistan Judgment or Appellate Order. Under Article 189 of the Constitution, its legal ruling is binding on all courts, tribunals, and authorities across Pakistan.";
+        ? "یہ سپریم کورٹ آف پاکستان (ملک کی سب سے بڑی عدالت) کا حتمی فیصلہ ہے۔ جج صاحب نے نچلی عدالتوں کے فیصلوں کو دیکھ کر اپنا آخری فیصلہ سنا دیا ہے۔ آسان بات یہ ہے کہ سپریم کورٹ کا فیصلہ ملک کی تمام عدالتوں، سرکاری اداروں اور ہر شہری پر لازمی لاگو ہوتا ہے۔"
+        : "This is a final ruling from the Supreme Court of Pakistan—the highest court in the country. In plain words: the judges reviewed what the lower courts decided and reached their final conclusion. Under Pakistan's Constitution, whatever the Supreme Court decides must be followed by every court and person in Pakistan.";
       points = isUr
         ? [
-            "سپریم کورٹ نے ماتحت عدالتوں کے فیصلوں کا حتمی جائزہ لے کر فیصلہ صادر کیا ہے۔",
-            "آئین پاکستان یا متعلقہ قانون کی دفعات کی درست تشریح واضح کی گئی ہے۔",
-            "فریقین کی اپیل کے بارے میں حتمی حکم دیا گیا ہے۔",
+            "سپریم کورٹ کے سینئر ججوں نے پورے معاملے کو باریکی سے دیکھ کر حتمی فیصلہ دیا۔",
+            "اس فیصلے نے اس جیسے تمام دیگر مقدمات کے لیے بھی ایک پکا قانونی اصول طے کر دیا ہے۔",
+            "اب فریقین کو اسی فیصلے کے مطابق عمل کرنا ہوگا اور تمام جھگڑا ختم ہو چکا ہے۔",
           ]
         : [
-            "Supreme Court evaluated statutory records and high court rulings.",
-            "Established binding legal precedent under Article 189 of the Constitution.",
-            "Final adjudication of civil or criminal appellate proceedings.",
+            "The highest judges reviewed the whole dispute and gave their final, binding ruling.",
+            "This decision sets the rule that all other courts in Pakistan must now follow.",
+            "The dispute has now been officially settled by the highest legal authority in the country.",
           ];
-      dates = isUr ? ["فیصلے کے اعلان کی تاریخ اور قانونی حوالہ (SCMR / PLD)"] : ["Date of announcement and law report citation (SCMR / PLD)"];
+      dates = isUr ? ["وہ تاریخ جس دن جج صاحب نے یہ حتمی فیصلہ سنایا"] : ["The date when the judges officially announced this final decision"];
       terms = isUr
-        ? ["آرٹیکل 188 کے تحت نظر ثانی کی درخواست [Review Petition یعنی فیصلے پر دوبارہ غور کی اپیل] کی میعاد صرف 30 دن ہے۔"]
-        : ["Limitation for filing Review Petition under Article 188 is strictly 30 days from judgment."];
+        ? ["اگر کوئی فریق اس فیصلے پر دوبارہ غور کی درخواست (Review) دینا چاہے تو عام طور پر اس کے پاس صرف 30 دن کی مہلت ہوتی ہے۔"]
+        : ["If someone wants to ask the court to take another look at the ruling (called a Review), they usually only have 30 days to apply."];
       nextSteps = isUr
         ? [
-            "سپریم کورٹ کی متعلقہ رجسٹری سے فیصلے کی باضابطہ مصدقہ نقل حاصل کریں۔",
-            "اپنے سینئر وکیل سے عدالتی فیصلے پر عمل درآمد کے لیے فوری رابطہ کریں۔",
+            "اپنے وکیل کے ذریعے سپریم کورٹ سے اس فیصلے کی باضابطہ مہر لگی ہوئی مصدقہ کاپی حاصل کریں۔",
+            "اپنے وکیل سے سمجھیں کہ اس فیصلے پر عمل درآمد کے لیے فوری طور پر کیا کرنا ہے۔",
           ]
         : [
-            "Obtain certified true copy from the Supreme Court registry.",
-            "Consult an Advocate Supreme Court regarding compliance or review grounds.",
+            "Ask your lawyer to get an official stamped copy of the decision from the court office.",
+            "Sit down with your advocate to discuss the practical steps needed to carry out the court's order.",
           ];
       questions = isUr
-        ? ["کیا اس فیصلے کے خلاف نظر ثانی کی درخواست زیر سماعت ہے یا یہ حتمی ہو چکا ہے؟"]
-        : ["Has any review petition been lodged or has this decree achieved finality?"];
+        ? ["کیا یہ فیصلہ بالکل حتمی ہو چکا ہے یا کسی فریق نے اس پر نظر ثانی کی درخواست دی ہے؟"]
+        : ["Is this ruling completely final, or has any review request been submitted?"];
     } else if (
       docTextLower.includes("writ") ||
       docTextLower.includes("high court") ||
       docTextLower.includes("article 199") ||
       docTextLower.includes("habeas corpus")
     ) {
-      docType = isUr ? "ہائی کورٹ آئینی رٹ پٹیشن (آرٹیکل 199)" : "High Court Constitutional Writ Petition (Article 199)";
+      docType = isUr ? "ہائی کورٹ کا عدالتی حکم یا آئینی درخواست" : "High Court Order or Petition (Constitutional Writ)";
       explanation = isUr
-        ? "یہ آئین کے آرٹیکل 199 کے تحت ہائی کورٹ میں دائر رٹ پٹیشن یا عدالتی حکم ہے [Writ یعنی ہائی کورٹ کا وہ خصوصی اختیار جس کے ذریعے کسی بھی سرکاری محکمے کو غیر قانونی کام سے روکا جا سکتا ہے]۔"
-        : "This document is a Constitutional Writ Petition or Order under Article 199 of the Constitution of Pakistan challenging state action or enforcing fundamental rights.";
+        ? "یہ ہائی کورٹ میں دائر کی گئی وہ خاص درخواست یا عدالتی حکم ہے جس میں جج صاحب سے درخواست کی گئی ہے کہ کسی سرکاری محکمے یا افسر کو ناانصافی یا غیر قانونی کام سے روکا جائے۔ آسان الفاظ میں: جب کوئی سرکاری ادارہ کسی شہری کے ساتھ زیادتی کرے تو ہائی کورٹ شہری کے حقوق کی حفاظت کے لیے حکم جاری کرتی ہے۔"
+        : "This is a case in the High Court asking the judges to stop a government department or official from doing something unfair or unlawful. In everyday words: the High Court has the power under Pakistan's Constitution to step in and protect ordinary citizens when public offices overstep their authority.";
       points = isUr
         ? [
-            "سرکاری ادارے یا افسر کے غیر قانونی اقدام کو ہائی کورٹ میں چیلنج کیا گیا ہے۔",
-            "آئین کے بنیادی حقوق (جیسے شفاف سماعت، آزادی اور جائیداد کے تحفظ) کی بحالی مانگی گئی ہے۔",
+            "کسی سرکاری محکمے یا افسر کے غلط فیصلے یا اقدام کو ہائی کورٹ میں چیلنج کیا گیا ہے۔",
+            "عدالت سے درخواست کی گئی ہے کہ شہری کے بنیادی حق (جیسے انصاف، آزادی یا جائیداد) کی حفاظت کی جائے۔",
+            "ہائی کورٹ معاملے کا حتمی فیصلہ ہونے تک سرکاری محکمے کو عارضی طور پر کام سے روک سکتی ہے۔",
           ]
         : [
-            "Challenge to unlawful executive action or absence of jurisdiction.",
-            "Prayer for writ of certiorari, mandamus, or habeas corpus.",
+            "A citizen is challenging an unfair or unlawful action taken by a government official or office.",
+            "The court is being asked to protect the citizen's basic constitutional rights.",
+            "The High Court can temporarily freeze the disputed action until it hears both sides fully.",
           ];
-      dates = isUr ? ["عدالت میں پیشی کی اگلی تاریخ یا جوابی رپورٹ داخل کرنے کی آخری مہلت"] : ["Next hearing date or timeline for filing parawise comments"];
+      dates = isUr ? ["عدالت میں پیشی کی اگلی تاریخ یا سرکاری محکمے کی طرف سے جواب جمع کرانے کی آخری مہلت"] : ["The next court hearing date, or the deadline for the government office to submit its written reply"];
       terms = isUr
-        ? ["اگر عدالت نے اسٹے آرڈر [Stay Order یعنی کام کو عارضی طور پر روکنے کا حکم] جاری کیا ہے تو اس کی شرائط کی پابندی لازمی ہے۔"]
-        : ["Comply strictly with any interim injunction / stay order condition."];
+        ? ["اگر جج صاحب نے کام روکنے کا عارضی حکم (اسٹے آرڈر) دیا ہے تو اس پر عمل کرنا دونوں فریقوں کے لیے لازمی ہے، کوئی بھی اس دوران حالات نہیں بدل سکتا۔"]
+        : ["If the judge gave a temporary stop order (stay order), neither side is allowed to change anything until the court meets again."];
       nextSteps = isUr
         ? [
-            "ہائی کورٹ کے وکیل کے ذریعے سرکاری محکمے کو عدالتی حکم نامے کی مصدقہ کاپی بھجوائیں۔",
-            "اگلی پیشی سے قبل اپنے تمام دستاویزی ثبوت تیار رکھیں۔",
+            "اپنے وکیل کے ذریعے سرکاری محکمے کو عدالتی حکم نامے کی مہر لگی کاپی فوری بھجوائیں۔",
+            "اگلی عدالتی پیشی سے پہلے اپنے تمام اصل کاغذات اور ثبوت سنبھال کر رکھیں۔",
           ]
         : [
-            "Serve certified court order copy on respondents immediately.",
-            "Prepare parawise rejoinder with counsel before the next hearing date.",
+            "Ensure your lawyer sends an official stamped copy of the court order to the government department right away.",
+            "Keep all your original papers and receipts ready before the next court date.",
           ];
-      questions = isUr ? ["کیا ہائی کورٹ نے مخالف سرکاری محکمے کو اسٹے یا نوٹس جاری کیا ہے؟"] : ["Did the High Court issue a stay order or notice to respondents?"];
+      questions = isUr ? ["کیا جج صاحب نے مخالف محکمے کو کام روکنے کا اسٹے آرڈر یا نوٹس جاری کیا ہے؟"] : ["Did the judge issue a temporary stay order to pause the government action until the next hearing?"];
     } else if (
       docTextLower.includes("fir") ||
       docTextLower.includes("police") ||
@@ -521,33 +541,35 @@ Conform strictly to this JSON format:
       docTextLower.includes("324") ||
       docTextLower.includes("thana")
     ) {
-      docType = isUr ? "ایف آئی آر / پولیس رپورٹ (دفعہ 154 ضابطہ فوجداری)" : "First Information Report (FIR) / Police Report (CrPC 154)";
+      docType = isUr ? "تھانے کی ایف آئی آر / پولیس رپورٹ" : "Police Report / First Information Report (FIR)";
       explanation = isUr
-        ? "یہ تھانے میں درج باقاعدہ ایف آئی آر [First Information Report یعنی کسی سنگین جرم کی پہلی باضابطہ پولیس رپورٹ] ہے جس کے بعد پولیس تفتیش شروع کرتی ہے۔"
-        : "This is a First Information Report (FIR) registered under Section 154 CrPC alleging offences under the Pakistan Penal Code.";
+        ? "یہ تھانے میں درج باقاعدہ ایف آئی آر (پہلی معلوماتی رپورٹ) ہے۔ جب کوئی شخص کسی جرم کی اطلاع پولیس کو دیتا ہے تو یہ پہلا سرکاری کاغذ لکھا جاتا ہے۔ اس میں بتایا گیا ہے کہ رپورٹ کس نے لکھوائی، واقعہ کب اور کہاں پیش آیا، اور کس پر کیا الزام لگایا گیا ہے تاکہ پولیس تفتیش شروع کر سکے۔"
+        : "This is a police First Information Report (FIR). It is the very first official paper written down at the police station when someone reports a crime. In simple words: it says who complained, what they claim happened, where and when it took place, and who is accused, so police officers can start looking into it.";
       points = isUr
         ? [
-            "مدعی کا بیان، وقوعہ کی تاریخ، وقت اور ملزمان پر عائد کیے گئے الزامات درج ہیں۔",
-            "تعزیرات پاکستان (PPC) کی وہ مخصوص دفعات درج ہیں جن کے تحت تفتیش ہوگی۔",
+            "رپورٹ درج کروانے والے شخص کا بیان اور الزامات کی تفصیل درج ہے۔",
+            "قانون کی وہ دفعات لکھی ہیں جن کے تحت پولیس اس معاملے کی چھان بین کرے گی۔",
+            "پولیس اس تحریر کی بنیاد پر گواہوں سے پوچھ گچھ کرے گی اور ثبوت اکٹھے کرے گی۔",
           ]
         : [
-            "Alleged date, time, and incident location stated by the complainant.",
-            "Sections of Pakistan Penal Code invoked against named accused persons.",
+            "It gives the story told by the person who went to the police station to make the complaint.",
+            "It lists the specific sections of criminal law that the police will investigate.",
+            "Police officers will collect evidence and question witnesses based on this written report.",
           ];
-      dates = isUr ? ["وقوعہ کی تاریخ اور تھانے میں رپورٹ درج ہونے کا درست وقت"] : ["Date of occurrence and timestamp of FIR registration"];
+      dates = isUr ? ["واقعہ پیش آنے کی تاریخ اور وقت، اور تھانے میں رپورٹ درج ہونے کا وقت"] : ["The date and time when the incident allegedly took place, and when the police wrote the report"];
       terms = isUr
-        ? ["ناقابل ضمانت دفعات [Non-bailable یعنی جن میں پولیس بغیر وارنٹ گرفتار کر سکتی ہے] میں گرفتاری سے بچنے کے لیے سیشن کورٹ سے فوری ضمانت قبل از گرفتاری (Bail Before Arrest) درکار ہوتی ہے۔"]
-        : ["Non-bailable offences carry risk of arrest; pre-arrest bail under CrPC 498 may be urgently required."];
+        ? ["اگر الزامات سنگین ہوں (ناقابلِ ضمانت) تو پولیس کو ملزم کو گرفتار کرنے کا اختیار ہوتا ہے، اس لیے عدالت سے گرفتاری سے پہلے ضمانت (Bail Before Arrest) کروانا ضروری ہوتا ہے۔"]
+        : ["If the charges are serious (non-bailable), the police have the power to make an arrest unless a judge grants pre-arrest bail first."];
       nextSteps = isUr
         ? [
-            "فوری طور پر کسی مستند فوجداری وکیل سے رابطہ کر کے سیشن عدالت سے ضمانت قبل از گرفتاری حاصل کریں۔",
-            "اپنی بے گناہی کے تمام ثبوت، کال ریکارڈز اور گواہان سنبھال کر رکھیں۔",
+            "اگر آپ یا آپ کا کوئی جاننے والا اس میں نامزد ہے تو فوری طور پر وکیل کے ذریعے ضمانت قبل از گرفتاری کی درخواست دیں۔",
+            "واقعے کے وقت آپ جہاں موجود تھے، اس کے تمام ثبوت، فون کی لوکیشن اور گواہوں کے بیانات سنبھال کر رکھیں۔",
           ]
         : [
-            "Engage criminal defense counsel immediately for protective / pre-arrest bail under CrPC 498.",
-            "Preserve all alibi evidence and witness statements for joining investigation.",
+            "If you or a loved one are named as an accused, consult a criminal lawyer immediately to apply for pre-arrest bail from the court.",
+            "Gather any evidence, messages, receipts, or witnesses showing where you actually were when the incident happened.",
           ];
-      questions = isUr ? ["کیا ایف آئی آر میں لگائی گئی دفعات قابل ضمانت ہیں یا ناقابل ضمانت؟"] : ["Are the sections bailable or non-bailable under Schedule II of CrPC?"];
+      questions = isUr ? ["کیا اس رپورٹ میں درج دفعات میں آسانی سے ضمانت ہو جاتی ہے یا عدالت سے فوری ضمانت قبل از گرفتاری لینا پڑے گی؟"] : ["Are these charges bailable, or is an urgent pre-arrest bail application needed to prevent arrest?"];
     } else if (
       docTextLower.includes("rent") ||
       docTextLower.includes("tenant") ||
@@ -555,33 +577,35 @@ Conform strictly to this JSON format:
       docTextLower.includes("lease") ||
       docTextLower.includes("kiraya")
     ) {
-      docType = isUr ? "کرایہ نامہ / کرایہ داری معاہدہ" : "Tenancy / Rental Agreement";
+      docType = isUr ? "کرایہ نامہ (مکان یا دکان کا کرایہ داری معاہدہ)" : "House / Shop Rental Agreement (Tenancy Agreement)";
       explanation = isUr
-        ? "یہ مکان یا دکان کا کرایہ نامہ ہے جس میں مالک اور کرایہ دار کے حقوق، ماہانہ کرائے کی رقم اور خالی کرنے کے قواعد طے کیے گئے ہیں۔"
-        : "This is a tenancy agreement setting out terms between landlord and tenant under provincial rented premises laws.";
+        ? "یہ مکان یا دکان کا کرایہ نامہ ہے۔ اس میں کرائے پر لینے والے شخص اور مالک کے درمیان طے پانے والے آسان اصول لکھے ہیں: ہر مہینے کتنا کرایہ دینا ہوگا، کس تاریخ تک دینا ہوگا، اور سیکیورٹی ڈپازٹ کی کیا تفصیل ہے۔ کرائے دار کو ان اصولوں پر عمل کرنا ہوگا، اور مالک بھی قانونی طریقہ اپنائے بغیر کسی کو زبردستی نہیں نکال سکتا۔"
+        : "This is a rental agreement. The person renting the property and the owner have put their agreement in writing so both sides know the rules. It states how much rent must be paid each month, when it is due, how much security deposit was handed over, and what happens if someone wants to end the agreement.";
       points = isUr
         ? [
-            "ماہانہ کرائے کی رقم اور ہر ماہ ادائیگی کی آخری تاریخ درج ہے۔",
-            "سیکیورٹی ڈپازٹ اور مکان خالی کرانے کے نوٹس کی مدت طے ہے۔",
+            "کرائے پر رہنے والے کو ہر مہینے طے شدہ تاریخ پر پورا کرایہ ادا کرنا ہوگا۔",
+            "اس میں لکھا ہے کہ کتنی ایڈوانس رقم جمع کرائی گئی ہے اور مکان خالی کرتے وقت وہ کیسے واپس ملے گی۔",
+            "اگر کوئی فریق مکان خالی کرانا یا چھوڑنا چاہے تو اسے ایک یا دو ماہ پہلے تحریری نوٹس دینا ہوگا۔",
           ]
         : [
-            "Monthly rent amount and payment schedule specified.",
-            "Security deposit and notice period for termination defined.",
+            "The person renting must pay the agreed rent on or before the due date every month.",
+            "It explains how much security deposit was paid and the terms for getting it back when moving out.",
+            "Either the owner or renter must usually give advance written notice before ending the agreement.",
           ];
-      dates = isUr ? ["کرایہ داری کی مدت شروع ہونے اور ختم ہونے کی تاریخ"] : ["Commencement and expiration dates of tenancy"];
+      dates = isUr ? ["کرایہ داری شروع ہونے کی تاریخ، ہر ماہ کرایہ دینے کی تاریخ، اور معاہدے کی مدت کا خاتمہ"] : ["The date the tenancy begins, the day rent is due each month, and when the agreement finishes"];
       terms = isUr
-        ? ["مالک مکان کرایہ دار کو زبردستی یا تالے لگا کر نہیں نکال سکتا؛ بے دخلی کے لیے رینٹ ٹربیونل سے باقاعدہ قانونی حکم حاصل کرنا لازمی ہے۔"]
-        : ["Landlord cannot evict tenant forcefully without an order from the Rent Tribunal."];
+        ? ["مالک مکان زبردستی تالے لگا کر یا دھمکی دے کر کرائے دار کو نہیں نکال سکتا؛ اگر کوئی اختلاف ہو تو متعلقہ رینٹ کورٹ سے قانونی فیصلہ لینا پڑتا ہے۔"]
+        : ["The owner cannot forcefully lock the door or push the renter out; any eviction must go through the proper Rent Tribunal process."];
       nextSteps = isUr
         ? [
-            "اس معاہدے کو رینٹ رجسٹرار کے پاس رجسٹر کروائیں تاکہ قانونی تحفظ ملے۔",
-            "ہر ماہ کا کرایہ بینک کے ذریعے یا دستخط شدہ رسید کے ساتھ ادا کریں۔",
+            "اس کرایہ نامے کو رینٹ رجسٹرار کے دفتر میں درج کروائیں تاکہ دونوں فریقوں کو قانون کا تحفظ حاصل ہو۔",
+            "کرایہ ہمیشہ بینک کے ذریعے ادا کریں یا ہر مہینے دستخط شدہ رسید ضرور لیں۔",
           ]
         : [
-            "Register tenancy agreement with the local Rent Registrar.",
-            "Ensure all rent payments are made via bank or against signed receipts.",
+            "Register the rental agreement with the local Rent Registrar so both sides have full legal protection.",
+            "Always pay rent through a bank transfer or make sure you get a signed and dated paper receipt every month.",
           ];
-      questions = isUr ? ["کیا یہ کرایہ نامہ متعلقہ رینٹ کنٹرولر کے پاس رجسٹرڈ ہے؟"] : ["Is the tenancy registered with the local rent controller?"];
+      questions = isUr ? ["کیا یہ کرایہ نامہ سرکاری رینٹ کنٹرولر کے پاس رجسٹرڈ ہے تاکہ کوئی فریق اپنی بات سے نہ پھر سکے؟"] : ["Is this rental agreement registered with the local rent controller to protect both sides?"];
     } else if (
       docTextLower.includes("nikah") ||
       docTextLower.includes("talaq") ||
@@ -591,61 +615,65 @@ Conform strictly to this JSON format:
       docTextLower.includes("maintenance") ||
       docTextLower.includes("custody")
     ) {
-      docType = isUr ? "خاندانی قانونی دستاویز (نکاح نامہ / خلع / نفقہ / حضانت)" : "Family Legal Document (Nikahnama / Talaq / Maintenance / Custody)";
+      docType = isUr ? "خاندانی قانونی دستاویز (نکاح نامہ، خرچہ یا بچوں کی نگہداشت)" : "Family Legal Document (Nikahnama, Maintenance, or Custody)";
       explanation = isUr
-        ? "یہ فیملی کورٹ یا مسلم فیملی لاز کے تحت مہر، نفقہ [خرچہ نان و نفقہ]، طلاق، خلع یا بچوں کی نگہداشت (حضانت) سے متعلق قانونی دستاویز ہے۔"
-        : "This document concerns family rights under the Family Courts Act 1964 and Muslim Family Laws Ordinance 1961.";
+        ? "یہ خاندانی حقوق سے متعلق دستاویز ہے—جیسے شادی کی شرائط (نکاح نامہ)، بیوی اور بچوں کا ماہانہ خرچہ (نان و نفقہ)، یا بچوں کی نگہداشت۔ پاکستانی قانون کے تحت میاں بیوی اور بچوں کے حقوق کی حفاظت کے لیے فیملی کورٹ کے آسان قواعد موجود ہیں۔"
+        : "This document is about family rights—such as marriage terms (Nikahnama), monthly living expenses for spouse and children (maintenance/kharcha), or who looks after the children (custody). Under Pakistani law, clear rules protect everyone's basic rights through the Family Court and local Union Council.";
       points = isUr
         ? [
-            "فریقین کی شناخت اور شرعی و قانونی ذمہ داریاں درج ہیں۔",
-            "مہر، ماہانہ خرچے یا بچوں کی پرورش کے معاملات کا فیصلہ شامل ہے۔",
+            "میاں بیوی کے حقوق اور فرائض کی وضاحت درج ہے۔",
+            "مہر کی رقم، ماہانہ خرچے اور بچوں کی دیکھ بھال کی ذمہ داری طے کی گئی ہے۔",
+            "خاندانی تنازعات کا فیصلہ عام عدالتوں کی بجائے فیملی کورٹ کے خصوصی قانون کے تحت ہوتا ہے۔",
           ]
         : [
-            "Details rights regarding dower (mehar), maintenance, and custody.",
-            "Regulated under exclusive jurisdiction of the Family Court.",
+            "It sets out the rights and responsibilities between husband and wife.",
+            "It outlines dower (haq mehr), monthly living expenses, and care for children.",
+            "Family disputes are handled under special family court laws designed to be faster and fairer.",
           ];
-      dates = isUr ? ["نکاح، نوٹس یا طلاق کی مؤثر تاریخ (90 دن کی عدت کی مدت)"] : ["Date of execution, union council notice, or 90-day reconciliation period"];
+      dates = isUr ? ["نکاح کی تاریخ، یونین کونسل کے نوٹس کا وقت، یا فیملی کورٹ کی پیشی کی تاریخ"] : ["The date of marriage, notice date to the Union Council, or next family court meeting date"];
       terms = isUr
-        ? ["مسلم فیملی لاز کے تحت طلاق کا باضابطہ نوٹس یونین کونسل کے چیئرمین کو بھیجنا قانونی طور پر لازمی ہے۔"]
-        : ["Notice to Union Council Chairman is mandatory under Section 7 of MFLO 1961."];
+        ? ["اگر علیحدگی یا طلاق کا معاملہ ہو تو متعلقہ یونین کونسل کے چیئرمین کو تحریری اطلاع دینا قانون کے مطابق لازمی ہے۔"]
+        : ["If divorce or separation is involved, sending an official written notice to the local Union Council is legally mandatory."];
       nextSteps = isUr
         ? [
-            "نکاح نامہ یا یونین کونسل کے مصدقہ ریکارڈ کی کاپیاں حاصل کریں۔",
-            "نفقے یا بچوں کی نگہداشت کے دعوے کے لیے فیملی کورٹ کے وکیل سے مشاورت کریں۔",
+            "اپنے نکاح نامے اور یونین کونسل کے تمام کاغذات کی اصل یا مصدقہ نقول سنبھال کر رکھیں۔",
+            "اگر خرچے یا بچوں کی پرورش کے بارے میں کوئی جھگڑا ہو تو فیملی وکیل سے مشورہ لیں۔",
           ]
         : [
-            "Verify registration with Union Council and retain certified copies.",
-            "Consult a family law advocate for custody or maintenance claims.",
+            "Keep safe certified copies of the Nikahnama and any Union Council certificates.",
+            "Consult a family lawyer if you need help claiming monthly maintenance or child custody.",
           ];
-      questions = isUr ? ["کیا یونین کونسل سے باقاعدہ طلاق کا مصدقہ سرٹیفکیٹ جاری ہو چکا ہے؟"] : ["Has the statutory certificate been issued by the Union Council?"];
+      questions = isUr ? ["کیا یونین کونسل سے متعلقہ تمام کارروائی مکمل ہو چکی ہے اور بچوں کا ماہانہ خرچہ طے ہے؟"] : ["Have the required notices been submitted to the Union Council, and is child maintenance clearly arranged?"];
     } else {
-      docType = isUr ? "قانونی معاہدہ / عدالتی دستاویز" : "Legal Deed / Instrument / Court Order";
+      docType = isUr ? "قانونی معاہدہ یا عدالتی نوٹس" : "Legal Agreement or Notice";
       explanation = isUr
-        ? `یہ قانونی دستاویز (${fileName}) حقوق، ذمہ داریوں اور قانونی اختیارات کے تحفظ کے لیے تیار کی گئی ہے۔`
-        : `This legal document (${fileName}) sets forth rights, obligations, and legal procedures under Pakistani law.`;
+        ? `یہ دستاویز (${fileName}) دو یا دو سے زائد فریقین کے درمیان حقوق اور ذمہ داریوں کو طے کرنے کے لیے لکھی گئی ہے۔ آسان الفاظ میں: اس میں لکھا ہے کہ کس نے کیا وعدہ کیا ہے، کس کو کیا حق ملے گا، اور اگر کوئی بات نہ مانی جائے تو کیا نتیجہ ہوگا۔`
+        : `This document (${fileName}) explains an agreement, notice, or decision between two or more parties. In plain words: it sets out what promises each person made, what rules they agreed to follow, and what will happen if someone does not keep their word.`;
       points = isUr
         ? [
-            "فریقین کے نام، دستخط اور گواہان کی تصدیق کی جانی چاہیے۔",
-            "اسٹامپ پیپر اور متعلقہ رجسٹریشن کی جانچ لازمی ہے۔",
+            "اس میں شامل افراد کے نام اور ان کے کیے گئے وعدے درج ہیں۔",
+            "رقم، جائیداد یا کام سے متعلق ذمہ داریوں کی تفصیل دی گئی ہے۔",
+            "معاہدے کے دوران کن باتوں پر عمل کرنا ضروری ہے اور کن چیزوں سے بچنا ہے۔",
           ]
         : [
-            "Identification and signatures of the executing parties.",
-            "Verification of required stamp duty and registration under law.",
+            "It identifies the people making the agreement and what they promised to do.",
+            "It explains what money, property, or responsibilities are involved.",
+            "It sets out the rules each person agreed to follow while this agreement is active.",
           ];
-      dates = isUr ? ["معاہدے کے آغاز کی تاریخ یا جواب دینے کی آخری مہلت"] : ["Effective execution date and limitation deadlines"];
+      dates = isUr ? ["معاہدے پر دستخط کا دن، ادائیگی کی تاریخ، یا نوٹس کا جواب دینے کی آخری مہلت"] : ["The date this agreement starts, payment due dates, or the deadline to answer a notice"];
       terms = isUr
-        ? ["معاہدے کی کسی بھی شق کی خلاف ورزی پر ہرجانے یا عدالتی دعوے کا خطرہ ہو سکتا ہے۔"]
-        : ["Notice requirements and consequences of non-compliance or breach."];
+        ? ["اگر کوئی شخص اس معاہدے کے اصولوں پر عمل نہیں کرے گا تو اسے جرمانہ ادا کرنا پڑ سکتا ہے یا قانونی کارروائی کا سامنا ہو سکتا ہے۔"]
+        : ["If someone does not follow the rules in this agreement, they may face the financial penalties or legal steps mentioned in the paper."];
       nextSteps = isUr
         ? [
-            "اصل اسٹامپ پیپر اور دستاویز کو محفوظ رکھیں اور فوٹو کاپیاں کروا لیں۔",
-            "دستخط کرنے سے قبل کسی مستند وکیل سے شقوں کی وضاحت کروائیں۔",
+            "اس کاغذ کی اصل کاپی سنبھال کر رکھیں اور اپنے پاس ایک صاف تصویر یا فوٹو کاپی محفوظ کر لیں۔",
+            "دستخط کرنے یا کوئی قدم اٹھانے سے پہلے کسی بااعتماد وکیل سے اس کی مزید وضاحت کروا لیں۔",
           ]
         : [
-            "Preserve the original stamped document safely.",
-            "Have the terms reviewed by an enrolled legal practitioner.",
+            "Keep the original paper in a safe place, and take a clear photo or copy for your records.",
+            "Before signing or taking any big steps, talk to a qualified legal advisor to make sure you understand every detail.",
           ];
-      questions = isUr ? ["کیا یہ دستاویز رجسٹریشن ایکٹ 1908 کے تحت باقاعدہ رجسٹرڈ ہے؟"] : ["Is this document registered under the Registration Act 1908?"];
+      questions = isUr ? ["کیا اس معاہدے کی عدالت میں قانونی حیثیت کے لیے اسٹامپ پیپر یا رجسٹریشن ضروری ہے؟"] : ["Does this agreement need to be stamped or officially registered to be legally binding?"];
     }
 
     res.json({

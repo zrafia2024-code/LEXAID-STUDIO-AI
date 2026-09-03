@@ -766,44 +766,44 @@ export const base44 = {
           console.warn("Backend /api/analyze-document failed, using heuristic:", fetchErr);
         }
 
-        // Context-aware heuristic fallback
+        // Context-aware heuristic fallback in plain everyday language (as if sitting beside the user)
         const fLower = (fileName + " " + fileContent).toLowerCase();
         let documentType = isUr ? "قانونی دستاویز" : "Legal Document";
         let simpleExplanation = isUr
-          ? `یہ دستاویز (${fileName}) موصول ہو گئی ہے اور اس کے مندرجات کا پاکستانی قوانین کے تحت جائزہ لیا گیا ہے۔`
-          : `This document (${fileName}) has been cataloged and verified under Pakistani law.`;
+          ? `ہم نے یہ کاغذ (${fileName}) آپ کے ساتھ مل کر دیکھا ہے۔ آسان الفاظ میں: اس میں فریقین کے حقوق، ذمہ داریاں اور اصول لکھے ہیں تاکہ ہر کسی کو معلوم ہو کہ کیا کرنا جائز ہے اور کس چیز سے روکا گیا ہے۔`
+          : `We looked over this document (${fileName}) with you. In plain words: it explains what was agreed or decided, what rules each person must follow, and what will happen if someone does not keep their word.`;
         let importantPoints = isUr
-          ? ["دستاویز کی اصلیت اور فریقین کے دستخط کی تصدیق لازمی ہے۔", "متعلقہ عدالتی یا قانونی نوٹس کی مدت کا خیال رکھیں۔"]
-          : ["Verification of signatures and statutory execution.", "Observation of statutory notice and limitation deadlines."];
-        let importantDates = isUr ? ["دستاویز کے اجراء یا عدالتی کارروائی کی تاریخ"] : ["Execution date and applicable limitation period"];
+          ? ["دستاویز میں شامل افراد کے نام، دستخط اور ان کے کیے گئے وعدے درج ہیں۔", "اس میں طے شدہ شرائط اور رقم یا جائیداد سے متعلق اصول لکھے ہیں۔"]
+          : ["It lists the people involved and the promises each person made.", "It explains what money, property, or rules everyone agreed to follow."];
+        let importantDates = isUr ? ["معاہدے پر دستخط کا دن یا نوٹس کا جواب دینے کی آخری تاریخ"] : ["The date this starts, payment due dates, or the deadline to answer a notice"];
         let termsNeedingAttention = isUr
-          ? ["قانونی ذمہ داریاں، پیشگی نوٹس کی میعاد یا جرمانے کی شقیں"]
-          : ["Statutory obligations, notice period, or default clauses"];
+          ? ["اگر کوئی شخص ان اصولوں پر عمل نہیں کرے گا تو اسے ہرجانہ دینا پڑ سکتا ہے یا قانونی کارروائی کا سامنا ہوگا۔"]
+          : ["If someone fails to follow the rules in this paper, they may face the financial penalties or legal consequences mentioned in it."];
         let nextSteps = isUr
-          ? ["اصل دستاویز کو مصدقہ طور پر محفوظ رکھیں۔", "کسی مستند وکیل سے قانونی کارروائی یا جواب کے لیے مشاورت کریں۔"]
-          : ["Preserve original documents and obtain certified copies.", "Consult an enrolled advocate of the High Court for formal reply."];
+          ? ["اس کاغذ کی اصل کاپی محفوظ جگہ پر رکھیں اور ایک صاف تصویر اپنے پاس رکھیں۔", "کوئی بڑا قدم اٹھانے سے پہلے کسی بااعتماد وکیل سے اس کے تمام نکات اچھی طرح سمجھ لیں۔"]
+          : ["Keep the original document in a safe place and save a clear photo or copy.", "Talk with a qualified legal advisor to make sure you feel completely comfortable with every detail."];
         let questionsForProfessional = isUr
-          ? ["اس دستاویز کے تحت فوری قانونی چارہ جوئی کا بہترین راستہ کیا ہے؟"]
-          : ["What is the recommended legal remedy or proceeding under this instrument?"];
+          ? ["اس دستاویز کے تحت ہمارے حقوق محفوظ رکھنے کے لیے فوری طور پر کیا کرنا ضروری ہے؟"]
+          : ["What practical steps should we take right now to make sure our rights are completely protected under this paper?"];
 
         if (fLower.includes("supreme") || fLower.includes("scmr") || fLower.includes("cpla")) {
-          documentType = isUr ? "سپریم کورٹ آف پاکستان کا فیصلہ / حکم" : "Supreme Court of Pakistan Judgment / Order";
+          documentType = isUr ? "سپریم کورٹ آف پاکستان کا حتمی فیصلہ" : "Supreme Court of Pakistan Final Decision";
           simpleExplanation = isUr
-            ? "یہ سپریم کورٹ آف پاکستان کا عدالتی فیصلہ ہے جو آرٹیکل 189 کے تحت پاکستان کی تمام ماتحت عدالتوں پر لازم و نافذ العمل ہے۔"
-            : "This is a Supreme Court of Pakistan Judgment binding on all courts under Article 189 of the Constitution.";
+            ? "یہ سپریم کورٹ آف پاکستان (ملک کی سب سے بڑی عدالت) کا حتمی فیصلہ ہے۔ جج صاحبان نے نچلی عدالت کے فیصلے کا جائزہ لے کر آخری فیصلہ سنایا ہے۔ پاکستان میں سپریم کورٹ کا فیصلہ ملک کی تمام عدالتوں اور تمام شہریوں پر لازمی لاگو ہوتا ہے۔"
+            : "This is a final ruling from the Supreme Court of Pakistan—the highest court in the country. In simple terms: the judges reviewed the case and made a final decision that must be followed by every court and person across Pakistan.";
           importantPoints = isUr
-            ? ["عدالت عظمیٰ نے ماتحت عدالت کے فیصلے اور آئینی نکات کی تشریح کی ہے۔", "اپیل کے اخراج یا منظوری کا حتمی فیصلہ دیا گیا ہے۔"]
-            : ["Supreme Court evaluated statutory arguments.", "Binding precedent established under Article 189."];
-          importantDates = isUr ? ["فیصلے کی تاریخ اور رپورٹنگ حوالہ (SCMR)"] : ["Date of judgment and citation (SCMR / PLD)"];
+            ? ["سپریم کورٹ نے پورے معاملے کا جائزہ لے کر اپنا حتمی اور پکا فیصلہ سنا دیا ہے۔", "اس فیصلے نے اس جیسے تمام دیگر مقدمات کے لیے بھی ایک پکا اصول طے کر دیا ہے۔"]
+            : ["The highest court gave its final ruling after carefully reviewing the case.", "This ruling sets the standard rule that all other courts in Pakistan must now follow."];
+          importantDates = isUr ? ["وہ تاریخ جس دن سپریم کورٹ کے جج صاحب نے یہ حتمی فیصلہ سنایا"] : ["The date when the judges officially announced this final decision"];
           termsNeedingAttention = isUr
-            ? ["آرٹیکل 188 کے تحت نظر ثانی کی درخواست کی 30 دن کی قانونی مدت۔"]
-            : ["Limitation for filing Review Petition under Article 188 is 30 days."];
+            ? ["اگر کوئی فریق اس فیصلے پر دوبارہ غور کی درخواست (Review) دینا چاہے تو عام طور پر صرف 30 دن کی مہلت ہوتی ہے۔"]
+            : ["If anyone wants to ask the judges to take another look at the ruling (a Review), they usually only have 30 days to apply."];
           nextSteps = isUr
-            ? ["سپریم کورٹ سے مصدقہ نقل حاصل کریں۔", "وکیل سپریم کورٹ سے نظر ثانی یا نفاذ کے لیے مشاورت کریں۔"]
-            : ["Obtain certified copy from the Supreme Court registry.", "Consult an Advocate Supreme Court regarding compliance."];
+            ? ["اپنے وکیل کے ذریعے سپریم کورٹ کے دفتر سے اس فیصلے کی مہر لگی کاپی حاصل کریں۔", "اپنے وکیل سے سمجھیں کہ اس فیصلے پر عمل درآمد کے لیے فوری طور پر کیا کرنا ہے۔"]
+            : ["Ask your lawyer to get an official stamped copy of the decision from the court registry.", "Talk to your advocate about what needs to happen to put the judges' decision into practice."];
           questionsForProfessional = isUr
-            ? ["کیا اس فیصلے کے خلاف نظر ثانی دائر ہو چکی ہے؟"]
-            : ["Has any review petition been lodged against this judgment?"];
+            ? ["کیا یہ فیصلہ بالکل حتمی ہو چکا ہے یا کسی فریق نے اس پر نظر ثانی کی درخواست دی ہے؟"]
+            : ["Is this ruling completely final, or has any review request been submitted?"];
         }
 
         const analysis = {
